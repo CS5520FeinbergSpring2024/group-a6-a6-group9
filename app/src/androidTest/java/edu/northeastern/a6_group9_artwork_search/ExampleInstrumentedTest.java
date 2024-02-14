@@ -1,4 +1,4 @@
-package edu.northeastern.myapplication;
+package edu.northeastern.a6_group9_artwork_search;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("edu.northeastern.myapplication", appContext.getPackageName());
+        assertEquals("edu.northeastern.a6_group9_artwork_search", appContext.getPackageName());
     }
 }

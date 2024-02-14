@@ -13,5 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "My Application"
+rootProject.name = "A6-Group9-Artwork-Search"
 include(":app")
+ 

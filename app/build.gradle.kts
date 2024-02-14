@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "edu.northeastern.myapplication"
+    namespace = "edu.northeastern.a6_group9_artwork_search"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "edu.northeastern.myapplication"
+        applicationId = "edu.northeastern.a6_group9_artwork_search"
         minSdk = 27
         targetSdk = 34
         versionCode = 1
