@@ -1,6 +1,8 @@
-# emptyandroidstarter
+# Group9
 
-## Artwork
+## At your service
+
+### Artwork
 
 [Field Definition](app/src/main/java/edu/northeastern/a6_group9_artwork_search/at_your_service/Artwork.java)
 
