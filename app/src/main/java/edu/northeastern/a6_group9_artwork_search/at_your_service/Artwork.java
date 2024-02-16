@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 
-public class Artwork {
+public class Artwork implements Resource {
     private final int id;
     private final String title;
     private final String altText;

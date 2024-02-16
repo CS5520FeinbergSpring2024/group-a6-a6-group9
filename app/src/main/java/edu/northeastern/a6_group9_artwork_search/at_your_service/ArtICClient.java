@@ -24,14 +24,19 @@ public class ArtICClient {
      * @param page starting from 1
      *
      */
-    public Artwork[] listArtwork(int page) {
-        Artwork[] artworks;
+    public ListResponse listArtwork(int page) {
+        Artwork[] artworks = new Artwork[0];
+        Pagination pagination = null;
         JSONObject resp = queryResponse(formatURL("artworks", artworksFields, page, ""));
         try {
+            JSONObject paginationJsonObject = resp.getJSONObject("pagination");
+            pagination = new Pagination(paginationJsonObject.getInt("total"), paginationJsonObject.getInt("total_pages"), paginationJsonObject.getInt("current_page"));
             JSONArray artworksResp = resp.getJSONArray("data");
             artworks = new Artwork[artworksResp.length()];
+
             for (int i = 0; i < artworksResp.length(); i++) {
                 JSONObject cur = artworksResp.getJSONObject(i);
+
                 JSONArray categoriesJsonArray = cur.optJSONArray("category_titles");
                 String[] categories;
                 if (categoriesJsonArray != null) {
@@ -42,18 +47,19 @@ public class ArtICClient {
                 } else {
                     categories = new String[0];
                 }
+
                 String altText = "";
                 JSONObject thumbnailJsonObject = cur.optJSONObject("thumbnail");
                 if (thumbnailJsonObject != null) {
                     altText = thumbnailJsonObject.optString("alt_text");
                 }
+
                 artworks[i] = new Artwork(cur.getInt("id"), cur.optString("title", "Unnamed"), altText, cur.optString("date_display", "unknown"), cur.optString("artist_display", "unknown"), cur.optString("dimensions", "unknown"), cur.optInt("artist_id"), categories, cur.optString("image_id"));
             }
         } catch (JSONException e) {
             Log.e(logTag, "JSONException");
-            artworks = new Artwork[0];
         }
-        return artworks;
+        return new ListResponse(pagination, artworks);
     }
 
     private JSONObject queryResponse(URL url) {
@@ -65,13 +71,6 @@ public class ArtICClient {
             conn.connect();
             InputStream inputStream = conn.getInputStream();
             final String respStr = convertStreamToString(inputStream);
-//            for (int i = 0; i < respStr.length(); i += 3900) {
-//                int end = i + 3900;
-//                if (end > respStr.length()) {
-//                    end = respStr.length();
-//                }
-//                Log.d(logTag, respStr.substring(i, end));
-//            }
             resp = new JSONObject(respStr);
         } catch (IOException e) {
             Log.e(logTag, "IOException");
@@ -85,6 +84,7 @@ public class ArtICClient {
      *
      * @param resourceName one of the <a href="https://api.artic.edu/docs/#collections-2">artic collections</a>, e.g. artworks, agents
      * @param fields the fields that need to be kept
+     * @param page page number
      * @param fullTextQuery the full text search pattern that will be used in q, can be empty
      */
     private URL formatURL(String resourceName, String[] fields, int page, String fullTextQuery) {
