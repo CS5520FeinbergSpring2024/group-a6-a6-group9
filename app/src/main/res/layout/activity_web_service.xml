@@ -12,14 +12,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
         android:background="#FFFFE0"
-        android:text="Enter the title, completion time or artist's name to find the relevant artworks."
+        android:text="Enter the title, completion time or artist to search artworks."
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginStart="5dp"
@@ -39,7 +39,7 @@
 
     <TextView
         android:id="@+id/tv_artist"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
         android:layout_marginStart="5dp"
@@ -57,14 +57,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_artist" />
 
-    <DatePicker
+    <NumberPicker
         android:id="@+id/yearPicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
         android:layout_marginTop="2dp"
-        android:calendarViewShown="false"
-        android:spinnersShown="true"
+        app:layout_constraintEnd_toStartOf="@id/btn_search"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/et_artist" />
 
@@ -72,10 +70,11 @@
         android:id="@+id/btn_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
         android:onClick="callWebserviceButtonHandler"
         android:text="Search"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/yearPicker" />
+        app:layout_constraintStart_toEndOf="@id/yearPicker"
+        app:layout_constraintTop_toBottomOf="@id/et_artist" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
