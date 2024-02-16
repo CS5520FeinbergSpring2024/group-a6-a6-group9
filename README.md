@@ -15,4 +15,7 @@ Resource may be Artwork or ...
 ArtICClient artICClient = new ArtICClient();
 ListResponse listArtworkResponse = artICClient.listArtwork(1);
 Artwork[] artworks = (Artwork[]) listArtworkResponse.getResources();
+
+// search for artworks which is created before 1970 (WIP)
+ListResponse listArtworkResponse = artICClient.listArtwork(1, "", "", "", 0, 1970, "");
 ```
