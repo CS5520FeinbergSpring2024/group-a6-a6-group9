@@ -14,6 +14,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class ArtICClient {
     private final String logTag = "ArtICClient";
@@ -90,6 +91,27 @@ public class ArtICClient {
             Log.e(logTag, "JSONException");
         }
         return artworks;
+    }
+
+    public ArrayList<Agent> listAgent(int page) {
+        ArrayList<Agent> agents = new ArrayList<>();
+        JSONObject resp = queryResponse(formatURL("agents", page));
+        try {
+            JSONArray agentsResp = resp.getJSONArray("data");
+            for (int i = 0; i < agentsResp.length(); i++) {
+                JSONObject cur = agentsResp.getJSONObject(i);
+                agents.add(agents.size(), new Agent(
+                        cur.getInt("id"),
+                        cur.getString("title"),
+                        cur.getInt("birth_date"),
+                        cur.getInt("death_date"),
+                        cur.getString("artist_description"))
+                );
+            }
+        } catch (JSONException e) {
+            Log.e(logTag, "JSONException");
+        }
+        return agents;
     }
 
     private JSONObject queryResponse(URL url) {
