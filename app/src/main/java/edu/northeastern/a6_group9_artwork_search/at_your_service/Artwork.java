@@ -1,5 +1,7 @@
 package edu.northeastern.a6_group9_artwork_search.at_your_service;
 
+import android.os.Parcel;
+import androidx.annotation.NonNull;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
@@ -26,6 +28,30 @@ public class Artwork implements Resource {
         this.categories = categories;
         this.imageId = imageId;
     }
+
+    protected Artwork(Parcel in) {
+        id = in.readInt();
+        title = in.readString();
+        altText = in.readString();
+        completeYear = in.readString();
+        artistDisplay = in.readString();
+        dimensions = in.readString();
+        artistId = in.readInt();
+        categories = in.createStringArray();
+        imageId = in.readString();
+    }
+
+    public static final Creator<Artwork> CREATOR = new Creator<Artwork>() {
+        @Override
+        public Artwork createFromParcel(Parcel in) {
+            return new Artwork(in);
+        }
+
+        @Override
+        public Artwork[] newArray(int size) {
+            return new Artwork[size];
+        }
+    };
 
     /**
      *
@@ -95,5 +121,23 @@ public class Artwork implements Resource {
     @Override
     public String toString() {
         return String.format(Locale.getDefault(), "id: %d, title: %s, altText: %s, completeYear: %s, artistDisplay: %s, dimensions: %s, artistId: %d, categories: [%s], imageId: %s", id, title, altText, completeYear, artistDisplay, dimensions, artistId, String.join(",", categories), imageId);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(title);
+        dest.writeString(altText);
+        dest.writeString(completeYear);
+        dest.writeString(artistDisplay);
+        dest.writeString(dimensions);
+        dest.writeInt(artistId);
+        dest.writeStringArray(categories);
+        dest.writeString(imageId);
     }
 }

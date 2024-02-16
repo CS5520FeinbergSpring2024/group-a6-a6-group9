@@ -23,15 +23,43 @@ public class ArtICClient {
      *
      * @param page starting from 1
      *
+     * @return may be empty
      */
     public ListResponse listArtwork(int page) {
-        Artwork[] artworks = new Artwork[0];
-        Pagination pagination = null;
         JSONObject resp = queryResponse(formatURL("artworks", artworksFields, page, ""));
+        return new ListResponse(getPagination(resp), Artwork.class.getSimpleName(), getArtworks(resp));
+    }
+
+    /**
+     *
+     * @param page page number
+     * @param fullTextContains will be used in a full text search on all metadata
+     * @param titleContains will be searched for as a substring in title
+     * @param completeYearGt will be compared with the complete year, keep whose complete year is greater than the given number
+     * @param completeYearLt will be compared with the complete year, keep whose complete year is lower than the given number
+     * @param artistContains will be searched for as a substring in artist
+     *
+     * @return may be empty
+     */
+    public ListResponse listArtwork(int page, String fullTextContains, String titleContains, int completeYearGt, int completeYearLt, String artistContains) {
+        return null;
+    }
+
+    private Pagination getPagination(JSONObject obj) {
+        Pagination pagination = null;
         try {
-            JSONObject paginationJsonObject = resp.getJSONObject("pagination");
+            JSONObject paginationJsonObject = obj.getJSONObject("pagination");
             pagination = new Pagination(paginationJsonObject.getInt("total"), paginationJsonObject.getInt("total_pages"), paginationJsonObject.getInt("current_page"));
-            JSONArray artworksResp = resp.getJSONArray("data");
+        } catch (JSONException e) {
+            Log.e(logTag, "cannot find pagination section");
+        }
+        return pagination;
+    }
+
+    private Artwork[] getArtworks(JSONObject obj) {
+        Artwork[] artworks = new Artwork[0];
+        try {
+            JSONArray artworksResp = obj.getJSONArray("data");
             artworks = new Artwork[artworksResp.length()];
 
             for (int i = 0; i < artworksResp.length(); i++) {
@@ -59,20 +87,7 @@ public class ArtICClient {
         } catch (JSONException e) {
             Log.e(logTag, "JSONException");
         }
-        return new ListResponse(pagination, artworks);
-    }
-
-    /**
-     *
-     * @param page page number
-     * @param fullTextContains will be used in a full text search on all metadata
-     * @param titleContains will be searched for as a substring in title
-     * @param completeYearGt will be compared with the complete year, keep whose complete year is greater than the given number
-     * @param completeYearLt will be compared with the complete year, keep whose complete year is lower than the given number
-     * @param artistContains will be searched for as a substring in artist
-     */
-    public ListResponse listArtwork(int page, String fullTextContains, String titleContains, int completeYearGt, int completeYearLt, String artistContains) {
-        return null;
+        return artworks;
     }
 
     private JSONObject queryResponse(URL url) {
