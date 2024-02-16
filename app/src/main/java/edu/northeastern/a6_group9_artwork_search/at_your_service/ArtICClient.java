@@ -62,6 +62,19 @@ public class ArtICClient {
         return new ListResponse(pagination, artworks);
     }
 
+    /**
+     *
+     * @param page page number
+     * @param fullTextContains will be used in a full text search on all metadata
+     * @param titleContains will be searched for as a substring in title
+     * @param completeYearGt will be compared with the complete year, keep whose complete year is greater than the given number
+     * @param completeYearLt will be compared with the complete year, keep whose complete year is lower than the given number
+     * @param artistContains will be searched for as a substring in artist
+     */
+    public ListResponse listArtwork(int page, String fullTextContains, String titleContains, int completeYearGt, int completeYearLt, String artistContains) {
+        return null;
+    }
+
     private JSONObject queryResponse(URL url) {
         JSONObject resp = null;
         try {
