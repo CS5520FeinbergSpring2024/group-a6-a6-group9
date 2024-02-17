@@ -15,6 +15,8 @@
         android:theme="@style/Theme.A6Group9ArtworkSearch"
         tools:targetApi="31">
         <activity
+            android:name=".ResultsActivity" />
+        <activity
             android:name=".WebServiceActivity"
             android:exported="false" />
         <activity

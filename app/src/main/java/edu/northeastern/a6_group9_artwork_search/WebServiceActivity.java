@@ -2,8 +2,10 @@ package edu.northeastern.a6_group9_artwork_search;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.NumberPicker;
@@ -31,15 +33,19 @@ public class WebServiceActivity extends AppCompatActivity {
         yearPicker.setMinValue(1700);
         yearPicker.setValue(2024);
 
+        Button searchBtn = findViewById(R.id.btn_search);
+        searchBtn.setOnClickListener(v -> callWebserviceButtonHandler());
     }
 
-    public void callWebserviceButtonHandler(View view){
+    public void callWebserviceButtonHandler(){
         userInputs[0] = titleEditText.getText().toString().trim();
         userInputs[1] = artistEditText.getText().toString().trim();
         userInputs[2] = String.valueOf(yearPicker.getValue());
-        //Toast.makeText(this, "userInputs: " + userInputs[0] +
-                //", " + userInputs[1] + ", " + userInputs[2], Toast.LENGTH_LONG).show();
 
-        //New a new thread in the following...
+        Intent intent = new Intent(WebServiceActivity.this, ResultsActivity.class);
+        intent.putExtra("title", userInputs[0]);
+        intent.putExtra("artist", userInputs[1]);
+        intent.putExtra("year", userInputs[2]);
+        startActivity(intent);
     }
 }
