@@ -115,7 +115,7 @@ public class ArtICClient {
      * @param resourceName one of the <a href="https://api.artic.edu/docs/#collections-2">artic collections</a>, e.g. artworks, agents
      * @param fields the fields that need to be kept
      */
-    private URL formatURL(String resourceName, String[] fields, int page, String queryParams) {
+    public URL formatURL(String resourceName, String[] fields, int page, String queryParams) {
         StringBuilder urlStringBuilder = new StringBuilder("https://api.artic.edu/api/v1/");
         urlStringBuilder.append(resourceName).append("/search?page=").append(page).append("&fields=").append(String.join(",", fields));
         try {
@@ -133,7 +133,7 @@ public class ArtICClient {
         return url;
     }
 
-    private String formatArtworkQueryParams(String fullTextContains, String titleContains, int completeYearGte, int completeYearLte, String artistContains) {
+    public String formatArtworkQueryParams(String fullTextContains, String titleContains, int completeYearGte, int completeYearLte, String artistContains) {
         JSONObject params = new JSONObject();
         try {
             if (!fullTextContains.isEmpty()) {
@@ -186,5 +186,9 @@ public class ArtICClient {
     private String convertStreamToString(InputStream is) {
         Scanner s = new Scanner(is).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
+    }
+
+    public String[] getArtworksFields() {
+        return artworksFields;
     }
 }
