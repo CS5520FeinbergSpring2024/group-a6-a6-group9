@@ -25,8 +25,12 @@ import java.util.List;
 
 public class ArtICClient {
     private final String logTag = "ArtICClient";
-    private static final String baseUrl = "https://api.artic.edu/api/v1";
+    private String baseUrl = "https://api.artic.edu/api/v1";
     private final String[] artworksFields = new String[]{"id", "title", "thumbnail", "date_display", "artist_display", "dimensions", "artist_id", "category_titles", "image_id"};
+
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
 
     /**
      * List artworks.
@@ -102,36 +106,33 @@ public class ArtICClient {
             ArrayList<String> ids,
             Integer limit,
             ArrayList<String> fields,
-            Integer page) throws java.net.MalformedURLException{
+            Integer page) throws java.net.MalformedURLException, JSONException {
         ArrayList<Agent> agents = new ArrayList<>();
         HashMap<String, String> queryParams = new HashMap<>();
-        if(ids != null){
+        if (ids != null) {
             queryParams.put("ids", String.join(",", ids));
         }
-        if(limit != null) {
+        if (limit != null) {
             queryParams.put("limit", limit.toString());
         }
-        if(fields != null){
+        if (fields != null) {
             queryParams.put("fields", String.join(",", fields));
         }
-        if(page != null) {
+        if (page != null) {
             queryParams.put("page", page.toString());
         }
         JSONObject resp = queryResponse(buildURLWithParams("/agents", queryParams));
-        try {
-            JSONArray agentsResp = resp.getJSONArray("data");
-            for (int i = 0; i < agentsResp.length(); i++) {
-                JSONObject cur = agentsResp.getJSONObject(i);
-                agents.add(agents.size(), new Agent(
-                        cur.getInt("id"),
-                        cur.getString("title"),
-                        cur.getInt("birth_date"),
-                        cur.getInt("death_date"),
-                        cur.getString("artist_description"))
-                );
-            }
-        } catch (JSONException e) {
-            Log.e(logTag, "JSONException");
+        System.out.println(resp.toString());
+        JSONArray agentsResp = resp.getJSONArray("data");
+        for (int i = 0; i < agentsResp.length(); i++) {
+            JSONObject cur = agentsResp.getJSONObject(i);
+            System.out.println(cur.toString());
+            agents.add(agents.size(), new Agent(
+                    cur.getInt("id"),
+                    cur.optString("title", "No title"),
+                    cur.optInt("birth_date", -1),
+                    cur.optInt("death_date", -1),
+                    cur.optString("description", "No description")));
         }
         return agents;
     }
