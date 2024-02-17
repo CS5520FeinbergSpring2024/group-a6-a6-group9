@@ -10,18 +10,16 @@ import java.util.Locale;
 
 public class ListResponse implements Parcelable {
     private final Pagination pagination;
-    private final String resourceType;
     private final Resource[] resources;
 
-    public ListResponse(Pagination pagination, String resourceType, Resource[] resources) {
+    public ListResponse(Pagination pagination, Resource[] resources) {
         this.pagination = pagination;
-        this.resourceType = resourceType;
         this.resources = resources;
     }
 
     protected ListResponse(Parcel in) {
         pagination = in.readTypedObject(Pagination.CREATOR);
-        resourceType = in.readString();
+        String resourceType = in.readString();
         if (resourceType.equals(Artwork.class.getSimpleName())) {
             resources = in.createTypedArray(Artwork.CREATOR);
         } else {
@@ -45,10 +43,6 @@ public class ListResponse implements Parcelable {
         return pagination;
     }
 
-    public String getResourceType() {
-        return resourceType;
-    }
-
     public Resource[] getResources() {
         return resources;
     }
@@ -67,7 +61,10 @@ public class ListResponse implements Parcelable {
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeTypedObject(pagination, flags);
-        dest.writeString(resourceType);
+        if (resources instanceof Artwork[]) {
+            // mark the type of resource
+            dest.writeString(Artwork.class.getSimpleName());
+        }
         dest.writeTypedArray(resources, flags);
     }
 }
