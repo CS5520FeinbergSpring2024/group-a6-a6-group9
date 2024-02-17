@@ -16,6 +16,16 @@ ArtICClient artICClient = new ArtICClient();
 ListResponse listArtworkResponse = artICClient.listArtwork(1);
 Artwork[] artworks = (Artwork[]) listArtworkResponse.getResources();
 
-// search for artworks which is created before 1970 (WIP)
-ListResponse listArtworkResponse = artICClient.listArtwork(1, "", "", "", 0, 1970, "");
+// search for artworks which is created before or on 1970
+ListResponse listArtworkResponse = artICClient.listArtwork(1, "", "", 0, 1970, "");
+
+// search for artworks which is created after or on 1970, and artist name contains trump, and any metadata contains hey
+ListResponse listArtworkResponse = artICClient.listArtwork(1, "hey", "", 1970, 0, "trump");
+
+// it's parcelable, so it can be kept in a bundle
+Bundle bundle = new Bundle();
+bundle.putParcelable("key", listArtworkResponse);
+
+// extract from a bundle
+ListResponse listResponse = bundle.getParcelable("key", ListResponse.class);
 ```
