@@ -39,6 +39,13 @@ if (image == null) {
 }
 // imageView.setImageBitmap(image)
 
+
+// get artist based on artwork
+Artist artist = artwork.getArtist();
+if (artist == null) {
+    artist = artICClient.fetchArtworkArtist(artwork);
+}
+
 ```
 
 ### Agent

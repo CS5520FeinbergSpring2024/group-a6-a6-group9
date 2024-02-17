@@ -53,6 +53,16 @@ public class ArtICClientTest {
         Log.d(logTag, listArtworkResponse.toString());
     }
 
+    @Test
+    public void testFetchArtworkArtist() {
+        ArtICClient artICClient = new ArtICClient();
+        ListResponse listArtworkResponse = artICClient.listArtwork(1);
+        Artwork artwork = (Artwork) listArtworkResponse.getResources()[0];
+        Assert.assertNull(artwork.getArtist());
+        artICClient.fetchArtworkArtist(artwork);
+        Assert.assertNotNull(artwork.getArtist());
+    }
+
 
     @Test
     public void testArtworkFormat() {

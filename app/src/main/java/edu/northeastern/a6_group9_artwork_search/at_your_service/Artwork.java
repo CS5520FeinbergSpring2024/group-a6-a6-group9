@@ -18,6 +18,7 @@ public class Artwork implements Resource {
     private final String[] categories;
     private final String imageId;
     private Bitmap image;
+    private Agent artist;
 
     public Artwork(int id,  String title, String altText, String completeYear, String artistDisplay, String dimensions, int artistId, String[] categories, String imageId) {
         this.id = id;
@@ -30,6 +31,7 @@ public class Artwork implements Resource {
         this.categories = categories;
         this.imageId = imageId;
         image = null;
+        artist = null;
     }
 
     protected Artwork(Parcel in) {
@@ -43,6 +45,7 @@ public class Artwork implements Resource {
         categories = in.createStringArray();
         imageId = in.readString();
         image = in.readTypedObject(Bitmap.CREATOR);
+        artist = in.readTypedObject(Agent.CREATOR);
     }
 
     public static final Creator<Artwork> CREATOR = new Creator<Artwork>() {
@@ -129,10 +132,18 @@ public class Artwork implements Resource {
         this.image = image;
     }
 
+    public Agent getArtist() {
+        return artist;
+    }
+
+    public void setArtist(Agent artist) {
+        this.artist = artist;
+    }
+
     @NotNull
     @Override
     public String toString() {
-        return String.format(Locale.getDefault(), "id: %d, title: %s, altText: %s, completeYear: %s, artistDisplay: %s, dimensions: %s, artistId: %d, categories: [%s], imageId: %s", id, title, altText, completeYear, artistDisplay, dimensions, artistId, String.join(",", categories), imageId);
+        return String.format(Locale.getDefault(), "id: %d, title: %s, altText: %s, completeYear: %s, artistDisplay: %s, dimensions: %s, artistId: %d, categories: [%s], imageId: %s, artist: %s", id, title, altText, completeYear, artistDisplay, dimensions, artistId, String.join(",", categories), imageId, artist);
     }
 
     @Override
@@ -152,5 +163,6 @@ public class Artwork implements Resource {
         dest.writeStringArray(categories);
         dest.writeString(imageId);
         dest.writeTypedObject(image, flags);
+        dest.writeTypedObject(artist, flags);
     }
 }

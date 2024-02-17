@@ -281,6 +281,16 @@ public class ArtICClient {
         return image;
     }
 
+    public Agent fetchArtworkArtist(Artwork artwork) {
+        ListResponse listResponse = listAgent(1, artwork.getArtistId());
+        Agent[] agents = (Agent[]) listResponse.getResources();
+        if (agents.length > 0) {
+            artwork.setArtist(agents[0]);
+            return agents[0];
+        }
+        return null;
+    }
+
     private String convertStreamToString(InputStream is) {
         Scanner s = new Scanner(is).useDelimiter("\\A");
         return s.hasNext() ? s.next() : "";
