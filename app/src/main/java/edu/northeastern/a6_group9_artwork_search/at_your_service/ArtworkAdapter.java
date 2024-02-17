@@ -38,7 +38,7 @@ public class ArtworkAdapter extends RecyclerView.Adapter<ArtworkAdapter.ViewHold
 
         Glide.with(holder.artworkImageView.getContext())
                 .load(artwork.getImageId())
-                .placeholder(R.drawable.ic_launcher_background)
+                .placeholder(R.mipmap.ic_no_image)
                 .into(holder.artworkImageView);
     }
 
