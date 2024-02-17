@@ -13,20 +13,20 @@ public class Agent implements Resource {
     private final String title;
     private final int birthDate;
     private final int deathDate;
-    private final String artistDescription;
+    private final String description;
 
     public Agent(
             int id,
             String title,
             int birthDate,
             int deathDate,
-            String artistDescription
+            String description
     ) {
         this.id = id;
         this.title = title;
         this.birthDate = birthDate;
         this.deathDate = deathDate;
-        this.artistDescription = artistDescription;
+        this.description = description;
     }
 
     protected Agent(Parcel in) {
@@ -34,7 +34,7 @@ public class Agent implements Resource {
         title = in.readString();
         birthDate = in.readInt();
         deathDate = in.readInt();
-        artistDescription = in.readString();
+        description = in.readString();
     }
 
     public static final Creator<Agent> CREATOR = new Creator<Agent>() {
@@ -62,24 +62,29 @@ public class Agent implements Resource {
     }
 
     /**
-     * @return text to display when image load failed
+     *
+     * @return may be -1 if unknown
      */
     public int getBirthDate() {
         return birthDate;
     }
 
+    /**
+     *
+     * @return may be -1 if unknown
+     */
     public int getDeathDate() {
         return deathDate;
     }
 
-    public String getArtistDescription() {
-        return artistDescription;
+    public String getDescription() {
+        return description;
     }
 
     @NotNull
     @Override
     public String toString() {
-        return String.format(Locale.getDefault(), "id: %d, title: %s, birthDate: %d, deathDate: %d, artistDescription: %s", id, title, birthDate, deathDate, artistDescription);
+        return String.format(Locale.getDefault(), "id: %d, title: %s, birthDate: %d, deathDate: %d, artistDescription: %s", id, title, birthDate, deathDate, description);
     }
 
     @Override
@@ -93,7 +98,7 @@ public class Agent implements Resource {
         dest.writeString(title);
         dest.writeInt(birthDate);
         dest.writeInt(deathDate);
-        dest.writeString(artistDescription);
+        dest.writeString(description);
     }
 }
 
