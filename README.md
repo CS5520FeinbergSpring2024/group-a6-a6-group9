@@ -30,6 +30,22 @@ ListResponse listArtworkResponse = artICClient.listArtwork(1, "", "", 0, 1970, "
 
 // search for artworks which is created after or on 1970, and artist name contains trump, and any metadata contains hey
 ListResponse listArtworkResponse = artICClient.listArtwork(1, "hey", "", 1970, 0, "trump");
+
+
+// get image
+Bitmap image = artwork.getImage();
+if (image == null) {
+    image = artICClient.fetchArtworkImage(artwork);
+}
+// imageView.setImageBitmap(image)
+
+
+// get artist based on artwork
+Artist artist = artwork.getArtist();
+if (artist == null) {
+    artist = artICClient.fetchArtworkArtist(artwork);
+}
+
 ```
 
 ### Agent
