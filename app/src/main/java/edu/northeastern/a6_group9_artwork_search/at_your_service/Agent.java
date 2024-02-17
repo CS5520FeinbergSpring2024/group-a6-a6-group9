@@ -62,12 +62,17 @@ public class Agent implements Resource {
     }
 
     /**
-     * @return text to display when image load failed
+     *
+     * @return may be -1 if unknown
      */
     public int getBirthDate() {
         return birthDate;
     }
 
+    /**
+     *
+     * @return may be -1 if unknown
+     */
     public int getDeathDate() {
         return deathDate;
     }
