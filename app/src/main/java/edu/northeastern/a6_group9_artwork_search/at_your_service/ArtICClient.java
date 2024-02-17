@@ -20,6 +20,7 @@ import java.util.Map;
 
 public class ArtICClient {
     private final String logTag = "ArtICClient";
+    private static final String baseUrl = "https://api.artic.edu/api/v1";
     private final String[] artworksFields = new String[]{"id", "title", "thumbnail", "date_display", "artist_display", "dimensions", "artist_id", "category_titles", "image_id"};
     private final String[] agentsFields = new String[]{"id", "title", "birth_date", "death_date", "description"};
 
@@ -186,7 +187,6 @@ public class ArtICClient {
             return null;
         }
     }
-
 
     public String formatArtworkSearchParams(String fullTextContains, String titleContains, int completeYearGte, int completeYearLte, String artistContains) {
         JSONObject params = new JSONObject();
