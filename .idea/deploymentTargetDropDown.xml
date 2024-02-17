@@ -2,19 +2,13 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="ArtICClientTest">
-        <State />
-      </entry>
       <entry key="app">
         <State />
       </entry>
-      <entry key="buildURLWithParams()">
+      <entry key="testAgentFormat()">
         <State />
       </entry>
-      <entry key="testBuildURLWithParams()">
-        <State />
-      </entry>
-      <entry key="testListAgent()">
+      <entry key="testArtworkFormat()">
         <State />
       </entry>
       <entry key="testListArtwork()">

@@ -10,27 +10,18 @@ import android.net.Uri;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Scanner;
-import java.util.ArrayList;
 import java.util.Map;
-import java.util.Optional;
-import java.util.List;
 
 public class ArtICClient {
     private final String logTag = "ArtICClient";
-    private String baseUrl = "https://api.artic.edu/api/v1";
     private final String[] artworksFields = new String[]{"id", "title", "thumbnail", "date_display", "artist_display", "dimensions", "artist_id", "category_titles", "image_id"};
-
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
-    }
+    private final String[] agentsFields = new String[]{"id", "title", "birth_date", "death_date", "description"};
 
     /**
      * List artworks.
@@ -39,7 +30,10 @@ public class ArtICClient {
      * @return may be empty
      */
     public ListResponse listArtwork(int page) {
-        JSONObject resp = queryResponse(formatURL("artworks", artworksFields, page, ""));
+        Map<String, String> params = new HashMap<>();
+        params.put("fields", String.join(",", artworksFields));
+        params.put("page", String.valueOf(page));
+        JSONObject resp = queryResponse(buildURLWithParams("artworks", params));
         return new ListResponse(getPagination(resp), getArtworks(resp));
     }
 
@@ -53,7 +47,11 @@ public class ArtICClient {
      * @return may be empty
      */
     public ListResponse listArtwork(int page, String fullTextContains, String titleContains, int completeYearGte, int completeYearLte, String artistContains) {
-        JSONObject resp = queryResponse(formatURL("artworks", artworksFields, page, formatArtworkQueryParams(fullTextContains, titleContains, completeYearGte, completeYearLte, artistContains)));
+        Map<String, String> params = new HashMap<>();
+        params.put("fields", String.join(",", artworksFields));
+        params.put("page", String.valueOf(page));
+        params.put("params", formatArtworkSearchParams(fullTextContains, titleContains, completeYearGte, completeYearLte, artistContains));
+        JSONObject resp = queryResponse(buildURLWithParams("artworks", params));
         return new ListResponse(getPagination(resp), getArtworks(resp));
     }
 
@@ -102,39 +100,43 @@ public class ArtICClient {
         return artworks;
     }
 
-    public ArrayList<Agent> listAgent(
-            ArrayList<String> ids,
-            Integer limit,
-            ArrayList<String> fields,
-            Integer page) throws java.net.MalformedURLException, JSONException {
-        ArrayList<Agent> agents = new ArrayList<>();
-        HashMap<String, String> queryParams = new HashMap<>();
-        if (ids != null) {
-            queryParams.put("ids", String.join(",", ids));
-        }
-        if (limit != null) {
-            queryParams.put("limit", limit.toString());
-        }
-        if (fields != null) {
-            queryParams.put("fields", String.join(",", fields));
-        }
-        if (page != null) {
-            queryParams.put("page", page.toString());
-        }
-        JSONObject resp = queryResponse(buildURLWithParams("/agents", queryParams));
-        System.out.println(resp.toString());
-        JSONArray agentsResp = resp.getJSONArray("data");
-        for (int i = 0; i < agentsResp.length(); i++) {
-            JSONObject cur = agentsResp.getJSONObject(i);
-            System.out.println(cur.toString());
-            agents.add(agents.size(), new Agent(
-                    cur.getInt("id"),
-                    cur.optString("title", "No title"),
-                    cur.optInt("birth_date", -1),
-                    cur.optInt("death_date", -1),
-                    cur.optString("description", "No description")));
+    private Agent[] getAgents(JSONObject obj) {
+        Agent[] agents = new Agent[0];
+        try {
+            JSONArray agentsResp = obj.getJSONArray("data");
+            agents = new Agent[agentsResp.length()];
+
+            for (int i = 0; i < agentsResp.length(); i++) {
+                JSONObject cur = agentsResp.getJSONObject(i);
+
+                agents[i] = new Agent(
+                        cur.getInt("id"),
+                        cur.optString("title", "No title"),
+                        cur.optInt("birth_date", -1),
+                        cur.optInt("death_date", -1),
+                        cur.optString("description", "No description"));
+            }
+        } catch (JSONException e) {
+            Log.e(logTag, "JSONException");
         }
         return agents;
+    }
+
+    public ListResponse listAgent(int page) {
+        Map<String, String> params = new HashMap<>();
+        params.put("fields", String.join(",", agentsFields));
+        params.put("page", String.valueOf(page));
+        JSONObject resp = queryResponse(buildURLWithParams("agents", params));
+        return new ListResponse(getPagination(resp), getAgents(resp));
+    }
+
+    public ListResponse listAgent(int page, int id) {
+        Map<String, String> params = new HashMap<>();
+        params.put("fields", String.join(",", agentsFields));
+        params.put("page", String.valueOf(page));
+        params.put("params", formatAgentSearchParams(id));
+        JSONObject resp = queryResponse(buildURLWithParams("agents", params));
+        return new ListResponse(getPagination(resp), getAgents(resp));
     }
 
     private JSONObject queryResponse(URL url) {
@@ -156,29 +158,7 @@ public class ArtICClient {
     }
 
     /**
-     * @param resourceName one of the <a href="https://api.artic.edu/docs/#collections-2">artic collections</a>, e.g. artworks, agents
-     * @param fields       the fields that need to be kept
-     */
-    public URL formatURL(String resourceName, String[] fields, int page, String queryParams) {
-        StringBuilder urlStringBuilder = new StringBuilder("https://api.artic.edu/api/v1/");
-        urlStringBuilder.append(resourceName).append("/search?page=").append(page).append("&fields=").append(String.join(",", fields));
-        try {
-            urlStringBuilder.append("&params=").append(URLEncoder.encode(queryParams, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            Log.e(logTag, "UnsupportedEncodingException: " + queryParams);
-        }
-        URL url = null;
-        String urlString = urlStringBuilder.toString();
-        try {
-            url = new URL(urlString);
-        } catch (MalformedURLException e) {
-            Log.e(logTag, "MalformedURLException: " + urlString);
-        }
-        return url;
-    }
-
-    /**
-     * Builds a url with params.
+     * Builds an url with params.
      *
      * @param resourceName e.g. agents.
      * @param params       url parameters.
@@ -187,20 +167,28 @@ public class ArtICClient {
     public URL buildURLWithParams(
             String resourceName,
             Map<String, String> params
-    ) throws java.net.MalformedURLException {
-        String url = String.format("%s%s", baseUrl, resourceName);
-        if (params == null || params.isEmpty()) {
-            return new URL(url);
-        }
-        Uri.Builder builder = Uri.parse(url).buildUpon();
+    ) {
+        Uri.Builder builder = new Uri.Builder();
+        builder.scheme("https")
+                .authority("api.artic.edu")
+                .appendPath("api")
+                .appendPath("v1")
+                .appendPath(resourceName)
+                .appendPath("search");
+
         for (Map.Entry<String, String> entry : params.entrySet()) {
             builder.appendQueryParameter(entry.getKey(), entry.getValue());
         }
-        return new URL(builder.build().toString());
+        try {
+            return new URL(builder.build().toString());
+        } catch (MalformedURLException e) {
+            Log.e(logTag, "MalformedURLException");
+            return null;
+        }
     }
 
 
-    public String formatArtworkQueryParams(String fullTextContains, String titleContains, int completeYearGte, int completeYearLte, String artistContains) {
+    public String formatArtworkSearchParams(String fullTextContains, String titleContains, int completeYearGte, int completeYearLte, String artistContains) {
         JSONObject params = new JSONObject();
         try {
             if (!fullTextContains.isEmpty()) {
@@ -208,18 +196,27 @@ public class ArtICClient {
             }
 
             JSONObject query = new JSONObject();
+            JSONObject boolQuery = new JSONObject();
+            query.put("bool", boolQuery);
+            JSONArray mustQuery = new JSONArray();
+            boolQuery.put("must", mustQuery);
 
             if (!titleContains.isEmpty() || !artistContains.isEmpty()) {
-                JSONObject matchQuery = new JSONObject();
-                query.put("match", matchQuery);
-
                 if (!titleContains.isEmpty()) {
+                    JSONObject subMustQuery = new JSONObject();
+                    mustQuery.put(subMustQuery);
+                    JSONObject matchQuery = new JSONObject();
+                    subMustQuery.put("match", matchQuery);
                     JSONObject titleQuery = new JSONObject();
                     matchQuery.put("title", titleQuery);
                     titleQuery.put("query", titleContains);
                 }
 
                 if (!artistContains.isEmpty()) {
+                    JSONObject subMustQuery = new JSONObject();
+                    mustQuery.put(subMustQuery);
+                    JSONObject matchQuery = new JSONObject();
+                    subMustQuery.put("match", matchQuery);
                     JSONObject artistQuery = new JSONObject();
                     matchQuery.put("artist_title", artistQuery);
                     artistQuery.put("query", artistContains);
@@ -227,8 +224,10 @@ public class ArtICClient {
             }
 
             if (completeYearGte > 0 || completeYearLte > 0) {
+                JSONObject subMustQuery = new JSONObject();
+                mustQuery.put(subMustQuery);
                 JSONObject rangeQuery = new JSONObject();
-                query.put("range", rangeQuery);
+                subMustQuery.put("range", rangeQuery);
 
                 JSONObject completeYearQuery = new JSONObject();
                 rangeQuery.put("date_end", completeYearQuery);
@@ -241,11 +240,27 @@ public class ArtICClient {
                 }
             }
 
-            if (query.length() > 0) {
+            if (mustQuery.length() > 0) {
                 params.put("query", query);
             }
         } catch (JSONException e) {
             Log.e(logTag, String.format(Locale.getDefault(), "JSONException, fullTextContains: %s, titleContains: %s, completeYearGt: %d, completeYearLt: %d, artistContains: %s", fullTextContains, titleContains, completeYearGte, completeYearLte, artistContains));
+        }
+        return params.toString();
+    }
+
+    public String formatAgentSearchParams(int id) {
+        JSONObject params = new JSONObject();
+        try {
+            JSONObject query = new JSONObject();
+            params.put("query", query);
+            JSONObject termQuery = new JSONObject();
+            query.put("term", termQuery);
+            JSONObject idQuery = new JSONObject();
+            termQuery.put("id", idQuery);
+            idQuery.put("value", id);
+        } catch (JSONException e) {
+            Log.e(logTag, "JSONException, id: " + id);
         }
         return params.toString();
     }
@@ -257,5 +272,9 @@ public class ArtICClient {
 
     public String[] getArtworksFields() {
         return artworksFields;
+    }
+
+    public String[] getAgentsFields() {
+        return agentsFields;
     }
 }
