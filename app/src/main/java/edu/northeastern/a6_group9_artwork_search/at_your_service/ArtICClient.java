@@ -1,9 +1,12 @@
 package edu.northeastern.a6_group9_artwork_search.at_your_service;
 
 import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.net.Uri;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,18 +15,23 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Optional;
+import java.util.List;
 
 public class ArtICClient {
     private final String logTag = "ArtICClient";
+    private static final String baseUrl = "https://api.artic.edu/api/v1";
     private final String[] artworksFields = new String[]{"id", "title", "thumbnail", "date_display", "artist_display", "dimensions", "artist_id", "category_titles", "image_id"};
 
     /**
      * List artworks.
      *
      * @param page starting from 1
-     *
      * @return may be empty
      */
     public ListResponse listArtwork(int page) {
@@ -32,14 +40,12 @@ public class ArtICClient {
     }
 
     /**
-     *
-     * @param page page number
+     * @param page             page number
      * @param fullTextContains will be used in a full text search on all metadata, case in-sensitive
-     * @param titleContains will be searched for as a substring in title, case in-sensitive
-     * @param completeYearGte will be compared with the complete year, keep whose complete year is greater than or equal to the given number
-     * @param completeYearLte will be compared with the complete year, keep whose complete year is lower than or equal to the given number
-     * @param artistContains will be searched for as a substring in artist, case in-sensitive
-     *
+     * @param titleContains    will be searched for as a substring in title, case in-sensitive
+     * @param completeYearGte  will be compared with the complete year, keep whose complete year is greater than or equal to the given number
+     * @param completeYearLte  will be compared with the complete year, keep whose complete year is lower than or equal to the given number
+     * @param artistContains   will be searched for as a substring in artist, case in-sensitive
      * @return may be empty
      */
     public ListResponse listArtwork(int page, String fullTextContains, String titleContains, int completeYearGte, int completeYearLte, String artistContains) {
@@ -92,6 +98,44 @@ public class ArtICClient {
         return artworks;
     }
 
+    public ArrayList<Agent> listAgent(
+            ArrayList<String> ids,
+            Integer limit,
+            ArrayList<String> fields,
+            Integer page) throws java.net.MalformedURLException{
+        ArrayList<Agent> agents = new ArrayList<>();
+        HashMap<String, String> queryParams = new HashMap<>();
+        if(ids != null){
+            queryParams.put("ids", String.join(",", ids));
+        }
+        if(limit != null) {
+            queryParams.put("limit", limit.toString());
+        }
+        if(fields != null){
+            queryParams.put("fields", String.join(",", fields));
+        }
+        if(page != null) {
+            queryParams.put("page", page.toString());
+        }
+        JSONObject resp = queryResponse(buildURLWithParams("/agents", queryParams));
+        try {
+            JSONArray agentsResp = resp.getJSONArray("data");
+            for (int i = 0; i < agentsResp.length(); i++) {
+                JSONObject cur = agentsResp.getJSONObject(i);
+                agents.add(agents.size(), new Agent(
+                        cur.getInt("id"),
+                        cur.getString("title"),
+                        cur.getInt("birth_date"),
+                        cur.getInt("death_date"),
+                        cur.getString("artist_description"))
+                );
+            }
+        } catch (JSONException e) {
+            Log.e(logTag, "JSONException");
+        }
+        return agents;
+    }
+
     private JSONObject queryResponse(URL url) {
         JSONObject resp = null;
         try {
@@ -111,9 +155,8 @@ public class ArtICClient {
     }
 
     /**
-     *
      * @param resourceName one of the <a href="https://api.artic.edu/docs/#collections-2">artic collections</a>, e.g. artworks, agents
-     * @param fields the fields that need to be kept
+     * @param fields       the fields that need to be kept
      */
     public URL formatURL(String resourceName, String[] fields, int page, String queryParams) {
         StringBuilder urlStringBuilder = new StringBuilder("https://api.artic.edu/api/v1/");
@@ -132,6 +175,29 @@ public class ArtICClient {
         }
         return url;
     }
+
+    /**
+     * Builds a url with params.
+     *
+     * @param resourceName e.g. agents.
+     * @param params       url parameters.
+     * @return url class.
+     */
+    public URL buildURLWithParams(
+            String resourceName,
+            Map<String, String> params
+    ) throws java.net.MalformedURLException {
+        String url = String.format("%s%s", baseUrl, resourceName);
+        if (params == null || params.isEmpty()) {
+            return new URL(url);
+        }
+        Uri.Builder builder = Uri.parse(url).buildUpon();
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            builder.appendQueryParameter(entry.getKey(), entry.getValue());
+        }
+        return new URL(builder.build().toString());
+    }
+
 
     public String formatArtworkQueryParams(String fullTextContains, String titleContains, int completeYearGte, int completeYearLte, String artistContains) {
         JSONObject params = new JSONObject();
