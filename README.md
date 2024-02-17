@@ -41,7 +41,7 @@ if (image == null) {
 
 
 // get artist based on artwork
-Artist artist = artwork.getArtist();
+Agent artist = artwork.getArtist();
 if (artist == null) {
     artist = artICClient.fetchArtworkArtist(artwork);
 }
