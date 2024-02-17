@@ -22,6 +22,8 @@ public class ListResponse implements Parcelable {
         String resourceType = in.readString();
         if (resourceType.equals(Artwork.class.getSimpleName())) {
             resources = in.createTypedArray(Artwork.CREATOR);
+        } else if (resourceType.equals(Agent.class.getSimpleName())) {
+            resources = in.createTypedArray(Agent.CREATOR);
         } else {
             resources = null;
         }
@@ -61,9 +63,11 @@ public class ListResponse implements Parcelable {
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeTypedObject(pagination, flags);
+        // mark the type of resource
         if (resources instanceof Artwork[]) {
-            // mark the type of resource
             dest.writeString(Artwork.class.getSimpleName());
+        } else if (resources instanceof Agent[]) {
+            dest.writeString(Agent.class.getSimpleName());
         }
         dest.writeTypedArray(resources, flags);
     }
