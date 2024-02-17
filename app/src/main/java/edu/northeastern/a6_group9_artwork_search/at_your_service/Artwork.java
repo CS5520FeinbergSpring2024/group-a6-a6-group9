@@ -1,5 +1,6 @@
 package edu.northeastern.a6_group9_artwork_search.at_your_service;
 
+import android.graphics.Bitmap;
 import android.os.Parcel;
 import androidx.annotation.NonNull;
 import org.jetbrains.annotations.NotNull;
@@ -16,6 +17,7 @@ public class Artwork implements Resource {
     private final int artistId;
     private final String[] categories;
     private final String imageId;
+    private Bitmap image;
 
     public Artwork(int id,  String title, String altText, String completeYear, String artistDisplay, String dimensions, int artistId, String[] categories, String imageId) {
         this.id = id;
@@ -27,6 +29,7 @@ public class Artwork implements Resource {
         this.artistId = artistId;
         this.categories = categories;
         this.imageId = imageId;
+        image = null;
     }
 
     protected Artwork(Parcel in) {
@@ -39,6 +42,7 @@ public class Artwork implements Resource {
         artistId = in.readInt();
         categories = in.createStringArray();
         imageId = in.readString();
+        image = in.readTypedObject(Bitmap.CREATOR);
     }
 
     public static final Creator<Artwork> CREATOR = new Creator<Artwork>() {
@@ -117,6 +121,14 @@ public class Artwork implements Resource {
         return imageId;
     }
 
+    public Bitmap getImage() {
+        return image;
+    }
+
+    public void setImage(Bitmap image) {
+        this.image = image;
+    }
+
     @NotNull
     @Override
     public String toString() {
@@ -139,5 +151,6 @@ public class Artwork implements Resource {
         dest.writeInt(artistId);
         dest.writeStringArray(categories);
         dest.writeString(imageId);
+        dest.writeTypedObject(image, flags);
     }
 }

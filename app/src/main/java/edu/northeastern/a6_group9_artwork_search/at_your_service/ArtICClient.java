@@ -1,5 +1,7 @@
 package edu.northeastern.a6_group9_artwork_search.at_your_service;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -20,7 +22,6 @@ import java.util.Map;
 
 public class ArtICClient {
     private final String logTag = "ArtICClient";
-    private static final String baseUrl = "https://api.artic.edu/api/v1";
     private final String[] artworksFields = new String[]{"id", "title", "thumbnail", "date_display", "artist_display", "dimensions", "artist_id", "category_titles", "image_id"};
     private final String[] agentsFields = new String[]{"id", "title", "birth_date", "death_date", "description"};
 
@@ -34,7 +35,7 @@ public class ArtICClient {
         Map<String, String> params = new HashMap<>();
         params.put("fields", String.join(",", artworksFields));
         params.put("page", String.valueOf(page));
-        JSONObject resp = queryResponse(buildURLWithParams("artworks", params));
+        JSONObject resp = queryJsonResponse(buildURLWithParams("artworks", params));
         return new ListResponse(getPagination(resp), getArtworks(resp));
     }
 
@@ -52,7 +53,7 @@ public class ArtICClient {
         params.put("fields", String.join(",", artworksFields));
         params.put("page", String.valueOf(page));
         params.put("params", formatArtworkSearchParams(fullTextContains, titleContains, completeYearGte, completeYearLte, artistContains));
-        JSONObject resp = queryResponse(buildURLWithParams("artworks", params));
+        JSONObject resp = queryJsonResponse(buildURLWithParams("artworks", params));
         return new ListResponse(getPagination(resp), getArtworks(resp));
     }
 
@@ -127,7 +128,7 @@ public class ArtICClient {
         Map<String, String> params = new HashMap<>();
         params.put("fields", String.join(",", agentsFields));
         params.put("page", String.valueOf(page));
-        JSONObject resp = queryResponse(buildURLWithParams("agents", params));
+        JSONObject resp = queryJsonResponse(buildURLWithParams("agents", params));
         return new ListResponse(getPagination(resp), getAgents(resp));
     }
 
@@ -136,11 +137,11 @@ public class ArtICClient {
         params.put("fields", String.join(",", agentsFields));
         params.put("page", String.valueOf(page));
         params.put("params", formatAgentSearchParams(id));
-        JSONObject resp = queryResponse(buildURLWithParams("agents", params));
+        JSONObject resp = queryJsonResponse(buildURLWithParams("agents", params));
         return new ListResponse(getPagination(resp), getAgents(resp));
     }
 
-    private JSONObject queryResponse(URL url) {
+    private JSONObject queryJsonResponse(URL url) {
         JSONObject resp = null;
         try {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -263,6 +264,21 @@ public class ArtICClient {
             Log.e(logTag, "JSONException, id: " + id);
         }
         return params.toString();
+    }
+
+    public Bitmap fetchArtworkImage(Artwork artwork) {
+        Bitmap image = null;
+        String url = "https://www.artic.edu/iiif/2/" + artwork.getImageId() + "/full/843,/0/default.jpg";
+        try {
+            InputStream in = new URL(url).openStream();
+            image = BitmapFactory.decodeStream(in);
+        } catch (MalformedURLException e) {
+            Log.e(logTag, "MalformedURLException, url: " + url);
+        } catch (IOException e) {
+            Log.e(logTag, "IOException");
+        }
+        artwork.setImage(image);
+        return image;
     }
 
     private String convertStreamToString(InputStream is) {
