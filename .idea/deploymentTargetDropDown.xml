@@ -5,6 +5,18 @@
       <entry key="app">
         <State />
       </entry>
+      <entry key="testArtworkFormat()">
+        <State />
+      </entry>
+      <entry key="testListArtwork()">
+        <State />
+      </entry>
+      <entry key="testParcelableAgent()">
+        <State />
+      </entry>
+      <entry key="testParcelableArtwork()">
+        <State />
+      </entry>
     </value>
   </component>
 </project>
