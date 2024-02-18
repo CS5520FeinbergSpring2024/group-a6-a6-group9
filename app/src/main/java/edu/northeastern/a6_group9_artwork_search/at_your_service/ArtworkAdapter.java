@@ -1,5 +1,6 @@
 package edu.northeastern.a6_group9_artwork_search.at_your_service;
 
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +12,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
+import java.util.concurrent.Executors;
 
 import edu.northeastern.a6_group9_artwork_search.R;
 
 public class ArtworkAdapter extends RecyclerView.Adapter<ArtworkAdapter.ViewHolder> {
 
     private List<Artwork> artworks;
+    private ArtICClient artICClient = new ArtICClient();
 
     public ArtworkAdapter(List<Artwork> artworks) {
         this.artworks = artworks;
@@ -36,10 +39,10 @@ public class ArtworkAdapter extends RecyclerView.Adapter<ArtworkAdapter.ViewHold
         holder.artworkArtistTextView.setText(artwork.getArtistDisplay());
         holder.artworkYearTextView.setText(artwork.getCompleteYear());
 
-        Glide.with(holder.artworkImageView.getContext())
-                .load(artwork.getImageId())
-                .placeholder(R.mipmap.ic_no_image)
-                .into(holder.artworkImageView);
+        Executors.newSingleThreadExecutor().execute(() -> {
+            Bitmap image = artICClient.fetchArtworkImage(artwork);
+            holder.artworkImageView.post(() -> holder.artworkImageView.setImageBitmap(image));
+        });
     }
 
     @Override
@@ -64,6 +67,12 @@ public class ArtworkAdapter extends RecyclerView.Adapter<ArtworkAdapter.ViewHold
         artworks.clear();
         artworks.addAll(newArtworks);
         notifyDataSetChanged();
+    }
+
+    public void addData(List<Artwork> newArtworks) {
+        int startPosition = this.artworks.size();
+        this.artworks.addAll(newArtworks);
+        notifyItemRangeInserted(startPosition, newArtworks.size());
     }
 
 }
