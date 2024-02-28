@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/artworkTitleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:textSize="16sp"
+        android:maxLines="3"
+        app:layout_constraintEnd_toStartOf="@+id/artworkImageView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="Artwork Title"/>
+
+    <ImageView
+        android:id="@+id/artworkImageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@mipmap/ic_launcher" />
+
+    <TextView
+        android:id="@+id/artworkArtistTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:maxLines="2"
+        app:layout_constraintTop_toBottomOf="@id/artworkTitleTextView"
+        app:layout_constraintStart_toStartOf="@id/artworkTitleTextView"
+        app:layout_constraintEnd_toEndOf="@id/artworkTitleTextView"
+        android:text="Artist"/>
+
+    <TextView
+        android:id="@+id/artworkYearTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:maxLines="2"
+        app:layout_constraintTop_toBottomOf="@id/artworkArtistTextView"
+        app:layout_constraintStart_toStartOf="@id/artworkArtistTextView"
+        android:text="Year"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
