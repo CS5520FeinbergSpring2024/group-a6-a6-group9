@@ -5,13 +5,13 @@
       <entry key="app">
         <State />
       </entry>
-      <entry key="testArtworkFormat()">
+      <entry key="testGetUser()">
         <State />
       </entry>
       <entry key="testListArtwork()">
         <State />
       </entry>
-      <entry key="testParcelableAgent()">
+      <entry key="testLoginUser()">
         <State />
       </entry>
       <entry key="testParcelableArtwork()">
