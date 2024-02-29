@@ -5,13 +5,22 @@
       <entry key="app">
         <State />
       </entry>
+      <entry key="testCountStickersSent()">
+        <State />
+      </entry>
+      <entry key="testLaunch()">
+        <State />
+      </entry>
       <entry key="testListArtwork()">
         <State />
       </entry>
       <entry key="testLoginUser()">
         <State />
       </entry>
-      <entry key="app">
+      <entry key="testRetrieveReceivedMessages()">
+        <State />
+      </entry>
+      <entry key="testSendMessage()">
         <State />
       </entry>
     </value>
