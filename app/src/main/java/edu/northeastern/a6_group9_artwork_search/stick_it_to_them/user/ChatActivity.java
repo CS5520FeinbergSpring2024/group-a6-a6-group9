@@ -6,9 +6,11 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import edu.northeastern.a6_group9_artwork_search.R;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity implements StickerPickFragment.OnStickerSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,10 +19,23 @@ public class ChatActivity extends AppCompatActivity {
         String username = getIntent().getStringExtra("USERNAME");
 
         ImageButton btnBack = findViewById(R.id.btnBack);
-        TextView chatPersonName = findViewById(R.id.chatPersonName);
-        chatPersonName.setText(username);
         btnBack.setOnClickListener(v -> onBackPressed());
 
+        TextView chatPersonName = findViewById(R.id.chatPersonName);
+        chatPersonName.setText(username);
+
+        FloatingActionButton fabShowStickers = findViewById(R.id.fab_show_stickers);
+        fabShowStickers.setOnClickListener(view -> showStickerPicker());
+        }
+
+    private void showStickerPicker() {
+        StickerPickFragment stickerPickFragment = new StickerPickFragment();
+        stickerPickFragment.show(getSupportFragmentManager(), "stickerPicker");
     }
 
+    @Override
+    public void onStickerSelected(int stickerResId) {
+        // Handle sticker selection (e.g., send sticker message, display in RecyclerView)
+        // You'll need to implement sending and displaying stickers in your chat messages here
+    }
 }
