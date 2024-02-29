@@ -2,10 +2,25 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="ArtICClientTest">
+      <entry key="app">
         <State />
       </entry>
-      <entry key="app">
+      <entry key="testCountStickersSent()">
+        <State />
+      </entry>
+      <entry key="testLaunch()">
+        <State />
+      </entry>
+      <entry key="testListArtwork()">
+        <State />
+      </entry>
+      <entry key="testLoginUser()">
+        <State />
+      </entry>
+      <entry key="testRetrieveReceivedMessages()">
+        <State />
+      </entry>
+      <entry key="testSendMessage()">
         <State />
       </entry>
     </value>

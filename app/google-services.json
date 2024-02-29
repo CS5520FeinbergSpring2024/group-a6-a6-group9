@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "825209549742",
+    "project_id": "neu-a6-group9",
+    "storage_bucket": "neu-a6-group9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:825209549742:android:b2158e379fa42827540e3f",
+        "android_client_info": {
+          "package_name": "edu.northeastern.a6_group9_artwork_search"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwLVlZeRzYPUCAr1hI9Cv0tankPD9Qvjw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
