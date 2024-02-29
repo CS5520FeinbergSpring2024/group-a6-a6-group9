@@ -45,8 +45,7 @@ public class ChatActivity extends AppCompatActivity implements StickerPickFragme
 
     @Override
     public void onStickerSelected(int stickerResId) {
-        // Handle sticker selection (e.g., send sticker message, display in RecyclerView)
-        // You'll need to implement sending and displaying stickers in your chat messages here
+        // handle send stickers
 
         StickerPickFragment existingFragment = (StickerPickFragment) getSupportFragmentManager().findFragmentById(R.id.stickerFragmentContainer);
         if (existingFragment != null) {

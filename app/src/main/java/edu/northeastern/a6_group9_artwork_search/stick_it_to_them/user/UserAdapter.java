@@ -15,7 +15,6 @@ import edu.northeastern.a6_group9_artwork_search.R;
 import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.User;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
-    private Context context;
     private LayoutInflater inflater;
     private List<User> userList;
     private OnUserClickListener listener;
@@ -27,7 +26,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     public UserAdapter(Context context, List<User> userList, OnUserClickListener listener) {
         this.inflater = LayoutInflater.from(context);
         this.userList = userList;
-        this.context = context;
         this.listener = listener;
     }
 
@@ -56,7 +54,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     @Override
     public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
         User user = userList.get(position);
-        holder.itemView.setTag(user); // Set the user as the tag for the view
+        holder.itemView.setTag(user);
         holder.userNameTextView.setText(user.getUsername());
     }
 
