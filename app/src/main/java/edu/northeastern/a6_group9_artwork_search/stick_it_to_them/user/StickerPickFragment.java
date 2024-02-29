@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
-import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import java.util.List;
 
 import edu.northeastern.a6_group9_artwork_search.R;
 
-public class StickerPickFragment extends DialogFragment {
+public class StickerPickFragment extends Fragment {
     private GridView gridViewStickers;
 
     public interface OnStickerSelectedListener {
@@ -41,6 +41,7 @@ public class StickerPickFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.sticker_pick_frag, container, false);
         gridViewStickers = view.findViewById(R.id.gridViewStickers);
 
+        // grab all frog stickers
         List<Integer> stickerIdsList = new ArrayList<>();
         Field[] drawables = R.drawable.class.getFields();
         for (Field field : drawables) {
