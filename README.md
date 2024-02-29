@@ -63,4 +63,4 @@ ListResponse listAgentResponse = artICClient.listAgent(1, 98765);
 
 ## Stick it to 'em
 
-A [listener](app/src/main/java/edu/northeastern/a6_group9_artwork_search/stick_it_to_them/DBClientListener.java) will be required. Here is an [example](app/src/androidTest/java/edu/northeastern/a6_group9_artwork_search/RealtimeDatabaseClientTest.java)
+A [listener](app/src/main/java/edu/northeastern/a6_group9_artwork_search/stick_it_to_them/DBClientListener.java) will be required. Here is an [example](app/src/androidTest/java/edu/northeastern/a6_group9_artwork_search/RealtimeDatabaseClientTest.java).
