@@ -22,9 +22,10 @@ import java.util.List;
 import edu.northeastern.a6_group9_artwork_search.R;
 import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.User;
 
-public class UserListActivity extends AppCompatActivity {
+public class UserListActivity extends AppCompatActivity implements UserAdapter.OnUserClickListener {
     private RecyclerView usersRecyclerView;
     private UserAdapter userAdapter;
+    private String currentUsername;
     private List<User> userList = new ArrayList<>();
 
     @Override
@@ -43,10 +44,19 @@ public class UserListActivity extends AppCompatActivity {
 
         usersRecyclerView = findViewById(R.id.usersRecyclerView);
         usersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        userAdapter = new UserAdapter(this, userList);
+        userAdapter = new UserAdapter(this, userList, this);
         usersRecyclerView.setAdapter(userAdapter);
+        currentUsername = getIntent().getStringExtra("CURRENT_USER_USERNAME");
 
+        Log.d("UserListActivity", currentUsername);
         fetchUsers();
+    }
+
+    @Override
+    public void onUserClicked(User user) {
+        Intent intent = new Intent(this, ChatActivity.class);
+        intent.putExtra("USERNAME", user.getUsername());
+        startActivity(intent);
     }
 
     private void fetchUsers() {
@@ -59,14 +69,15 @@ public class UserListActivity extends AppCompatActivity {
                 userList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     User user = snapshot.getValue(User.class);
-                    userList.add(user);
+                    if (user != null && !user.getUsername().equals(currentUsername)) {
+                        userList.add(user);
+                    }
                 }
                 userAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Log error or handle cancellation
                 Log.e("UserListActivity", "Database error", databaseError.toException());
             }
         });

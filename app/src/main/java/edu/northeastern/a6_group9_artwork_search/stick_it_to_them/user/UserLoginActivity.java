@@ -33,7 +33,10 @@ public class UserLoginActivity extends AppCompatActivity {
             @Override
             public void onUserLoggedIn(User user, String message) {
                 if (user != null) {
-                    navigateToUserListActivity();
+                    Intent intent = new Intent(UserLoginActivity.this, UserListActivity.class);
+                    intent.putExtra("CURRENT_USER_USERNAME", usernameEditText.getText().toString().trim());
+                    startActivity(intent);
+                    finish();
                 } else {
                     Toast.makeText(UserLoginActivity.this, "Error logging in, please try again later.", Toast.LENGTH_LONG).show();
                 }
@@ -66,11 +69,5 @@ public class UserLoginActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Username cannot be empty.", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private void navigateToUserListActivity() {
-        Intent intent = new Intent(UserLoginActivity.this, UserListActivity.class);
-        startActivity(intent);
-        finish();
     }
 }

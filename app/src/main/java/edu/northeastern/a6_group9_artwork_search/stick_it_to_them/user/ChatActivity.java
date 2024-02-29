@@ -1,6 +1,8 @@
 package edu.northeastern.a6_group9_artwork_search.stick_it_to_them.user;
 
 import android.os.Bundle;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,12 +14,13 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-    }
+        String username = getIntent().getStringExtra("USERNAME");
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
+        ImageButton btnBack = findViewById(R.id.btnBack);
+        TextView chatPersonName = findViewById(R.id.chatPersonName);
+        chatPersonName.setText(username);
+        btnBack.setOnClickListener(v -> onBackPressed());
+
     }
 
 }
