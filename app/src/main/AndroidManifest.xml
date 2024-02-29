@@ -20,6 +20,12 @@
             android:name=".WebServiceActivity"
             android:exported="false" />
         <activity
+            android:name=".stick_it_to_them.user.UserLoginActivity" />
+        <activity
+            android:name=".stick_it_to_them.user.UserListActivity" />
+        <activity
+            android:name=".stick_it_to_them.user.ChatActivity" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

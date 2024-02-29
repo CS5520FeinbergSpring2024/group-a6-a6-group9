@@ -11,20 +11,41 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Group 9"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/about_us"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
+        android:id="@+id/about_us"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="About Us"
+        app:layout_constraintBottom_toTopOf="@id/btn_web_service"
+        app:layout_constraintTop_toBottomOf="@id/tv_group_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
         android:id="@+id/btn_web_service"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
         android:onClick="startWebService"
         android:text="Web Service"
-        app:layout_constraintTop_toBottomOf="@+id/tv_group_name"
+        app:layout_constraintTop_toBottomOf="@id/about_us"
+        app:layout_constraintBottom_toTopOf="@id/btn_send_stickers"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btn_send_stickers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="startSendStickers"
+        android:text="Send Stickers"
+        app:layout_constraintTop_toBottomOf="@id/btn_web_service"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
