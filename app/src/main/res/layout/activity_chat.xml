@@ -14,13 +14,25 @@
         android:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent">
+
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/baseline_arrow_back_24"
+        android:contentDescription="back button" />
+    </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chatRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:paddingBottom="2dp"
+        android:clipToPadding="false"
+        android:background="@color/light_gray"
         app:layout_constraintTop_toBottomOf="@+id/toolbar_chat"
         app:layout_constraintBottom_toTopOf="@id/fab_show_stickers"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -40,6 +52,7 @@
         app:borderWidth="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         android:contentDescription="Sticker Icon" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

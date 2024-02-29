@@ -28,17 +28,14 @@ public class UserLoginActivity extends AppCompatActivity {
 
         usernameEditText = findViewById(R.id.usernameEditText);
         Button loginButton = findViewById(R.id.loginButton);
-        Button registerButton = findViewById(R.id.registerButton);
 
         databaseClient = new RealtimeDatabaseClient(new DBClientListener() {
             @Override
             public void onUserLoggedIn(User user, String message) {
                 if (user != null) {
-                    Intent intent = new Intent(UserLoginActivity.this, UserListActivity.class);
-                    startActivity(intent);
-                    finish();
+                    navigateToUserListActivity();
                 } else {
-                    Toast.makeText(UserLoginActivity.this, "Error logging in: " + message, Toast.LENGTH_LONG).show();
+                    Toast.makeText(UserLoginActivity.this, "Error logging in, please try again later.", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -59,11 +56,10 @@ public class UserLoginActivity extends AppCompatActivity {
             }
         });
 
-        loginButton.setOnClickListener(v -> loginUser());
-        registerButton.setOnClickListener(v -> registerUser());
+        loginButton.setOnClickListener(v -> login());
     }
 
-    private void loginUser() {
+    private void login() {
         String username = usernameEditText.getText().toString().trim();
         if (!username.isEmpty()) {
             databaseClient.loginUser(username);
@@ -72,7 +68,9 @@ public class UserLoginActivity extends AppCompatActivity {
         }
     }
 
-    private void registerUser() {
-        String username = usernameEditText.getText().toString().trim();
+    private void navigateToUserListActivity() {
+        Intent intent = new Intent(UserLoginActivity.this, UserListActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
