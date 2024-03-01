@@ -145,53 +145,27 @@ public class RealtimeDatabaseClient {
         });
     }
 
-    /***
-     * below functions retrieve messages from sender, and filter the messages based on receiver
-     * for proper display of sender/receiver in chat window
-     ***/
-    // retrieve all messages related to sender
-    public void retrieveConversationMessages(String currentUserUsername, String otherUserUsername) {
-        List<Message> conversationMessages = new ArrayList<>();
-
-        messageDatabaseReference.orderByChild("senderUsername").equalTo(currentUserUsername)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            Message message = snapshot.getValue(Message.class);
-                            if (message != null && otherUserUsername.equals(message.getReceiverUsername())) {
-                                conversationMessages.add(message);
-                            }
-                        }
-                        fetchReceivedMessages(currentUserUsername, otherUserUsername, conversationMessages);
+    // fetch messages related to two users only
+    public void fetchMessagesBetweenTwoUsers(String currentName, String receiverName) {
+        List<Message> messages = new ArrayList<>();
+        messageDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Message message = snapshot.getValue(Message.class);
+                    if (message != null &&
+                            (currentName.equals(message.getSenderUsername()) && receiverName.equals(message.getReceiverUsername()) ||
+                                    currentName.equals(message.getReceiverUsername()) && receiverName.equals(message.getSenderUsername()))) {
+                        messages.add(message);
                     }
+                }
+                listener.onRetrieveReceivedMessagesFinished(messages, null);
+            }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        listener.onRetrieveReceivedMessagesFinished(null, databaseError.getMessage());
-                    }
-                });
-    }
-
-    // from sender messages, filter messages to receiver
-    private void fetchReceivedMessages(String currentUserUsername, String otherUserUsername, List<Message> conversationMessages) {
-        messageDatabaseReference.orderByChild("receiverUsername").equalTo(currentUserUsername)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            Message message = snapshot.getValue(Message.class);
-                            if (message != null && otherUserUsername.equals(message.getSenderUsername())) {
-                                conversationMessages.add(message);
-                            }
-                        }
-                        listener.onRetrieveReceivedMessagesFinished(conversationMessages, null);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        listener.onRetrieveReceivedMessagesFinished(null, databaseError.getMessage());
-                    }
-                });
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                listener.onRetrieveReceivedMessagesFinished(null, databaseError.getMessage());
+            }
+        });
     }
 }

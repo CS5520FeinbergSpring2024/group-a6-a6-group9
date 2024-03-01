@@ -35,11 +35,13 @@ public class MessageActivity extends AppCompatActivity implements StickerPickFra
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
 
-        messageRecyclerView = findViewById(R.id.messageRecyclerView);
-        messageRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         String receiverUsername = getIntent().getStringExtra("RECEIVER_USERNAME");
         currentUsername = getIntent().getStringExtra("CURRENT_USER_USERNAME");
+
+        messageRecyclerView = findViewById(R.id.messageRecyclerView);
+        messageRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        messageAdapter = new MessageAdapter(messageList, currentUsername);
+        messageRecyclerView.setAdapter(messageAdapter);
 
         ImageButton btnBack = findViewById(R.id.btnBack);
         btnBack.setOnClickListener(v -> onBackPressed());
@@ -50,14 +52,8 @@ public class MessageActivity extends AppCompatActivity implements StickerPickFra
         FloatingActionButton fabShowStickers = findViewById(R.id.fab_show_stickers);
         fabShowStickers.setOnClickListener(view -> showStickerPicker());
 
-
         databaseClient = new RealtimeDatabaseClient(listener);
-        databaseClient.retrieveConversationMessages(currentUsername, receiverUsername);
-
-        RecyclerView recyclerView = findViewById(R.id.messageRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        messageAdapter = new MessageAdapter(messageList, currentUsername);
-        recyclerView.setAdapter(messageAdapter);
+        databaseClient.fetchMessagesBetweenTwoUsers(currentUsername, receiverUsername);
     }
 
     private void showStickerPicker() {
@@ -89,7 +85,6 @@ public class MessageActivity extends AppCompatActivity implements StickerPickFra
             messageList.add(message);
             messageAdapter.notifyItemInserted(messageList.size() - 1);
             messageRecyclerView.scrollToPosition(messageList.size() - 1);
-
         }
 
         @Override
