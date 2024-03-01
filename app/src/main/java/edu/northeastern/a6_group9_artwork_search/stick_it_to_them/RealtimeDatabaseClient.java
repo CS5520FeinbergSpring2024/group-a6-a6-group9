@@ -128,6 +128,22 @@ public class RealtimeDatabaseClient {
         });
     }
 
+    public void retrieveReceivedMessages(User user) {
+        messageDatabaseReference.orderByChild("receiverUsername").equalTo(user.getUsername()).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                List<Message> result = new ArrayList<>();
+                for (DataSnapshot record : task.getResult().getChildren()) {
+                    result.add(record.getValue(Message.class));
+                }
+                listener.onRetrieveReceivedMessagesFinished(result, null);
+            } else {
+                String message = "Error getting data" + task.getException();
+                Log.e(logTag, message);
+                listener.onRetrieveReceivedMessagesFinished(null, message);
+            }
+        });
+    }
+
     // retrieve all messages related to sender
     public void retrieveConversationMessages(String currentUserUsername, String otherUserUsername) {
         List<Message> conversationMessages = new ArrayList<>();

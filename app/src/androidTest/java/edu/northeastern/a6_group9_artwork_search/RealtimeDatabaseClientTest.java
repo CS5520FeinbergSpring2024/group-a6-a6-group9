@@ -90,4 +90,10 @@ public class RealtimeDatabaseClientTest {
         sleep();
     }
 
+    @Test
+    public void testRetrieveReceivedMessages() {
+        realtimeDatabaseClient.retrieveReceivedMessages(new User("hhh1"));
+        sleep();
+    }
+
 }

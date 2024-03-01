@@ -10,6 +10,7 @@ public class Message {
     private String senderUsername;
     private String receiverUsername;
     private String stickerId;
+    private Date sendTime;
 
     // Default constructor required for calls to DataSnapshot.getValue(User.class)
     public Message() {}
@@ -32,4 +33,7 @@ public class Message {
         return stickerId;
     }
 
+    public Date getSendTime() {
+        return sendTime;
+    }
 }
