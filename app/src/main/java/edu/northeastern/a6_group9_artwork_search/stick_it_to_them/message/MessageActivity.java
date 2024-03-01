@@ -25,6 +25,8 @@ public class MessageActivity extends AppCompatActivity implements StickerPickFra
 
     private RealtimeDatabaseClient databaseClient;
     private String currentUsername;
+    private RecyclerView messageRecyclerView;
+
     private List<Message> messageList = new ArrayList<>();
     private MessageAdapter messageAdapter;
 
@@ -32,6 +34,10 @@ public class MessageActivity extends AppCompatActivity implements StickerPickFra
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
+
+        messageRecyclerView = findViewById(R.id.messageRecyclerView);
+        messageRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
         String receiverUsername = getIntent().getStringExtra("RECEIVER_USERNAME");
         currentUsername = getIntent().getStringExtra("CURRENT_USER_USERNAME");
 
@@ -43,6 +49,7 @@ public class MessageActivity extends AppCompatActivity implements StickerPickFra
 
         FloatingActionButton fabShowStickers = findViewById(R.id.fab_show_stickers);
         fabShowStickers.setOnClickListener(view -> showStickerPicker());
+
 
         databaseClient = new RealtimeDatabaseClient(listener);
         databaseClient.retrieveConversationMessages(currentUsername, receiverUsername);
@@ -81,6 +88,8 @@ public class MessageActivity extends AppCompatActivity implements StickerPickFra
         public void onMessageReceived(Message message) {
             messageList.add(message);
             messageAdapter.notifyItemInserted(messageList.size() - 1);
+            messageRecyclerView.scrollToPosition(messageList.size() - 1);
+
         }
 
         @Override

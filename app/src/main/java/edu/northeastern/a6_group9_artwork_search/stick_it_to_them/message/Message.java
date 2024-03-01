@@ -2,7 +2,6 @@ package edu.northeastern.a6_group9_artwork_search.stick_it_to_them.message;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
-import java.util.Calendar;
 import java.util.Date;
 
 @IgnoreExtraProperties
@@ -19,6 +18,7 @@ public class Message {
         this.senderUsername = senderUsername;
         this.receiverUsername = receiverUsername;
         this.stickerId = stickerId;
+        this.sendTime = new Date();
     }
 
     public String getSenderUsername() {

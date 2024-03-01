@@ -128,6 +128,7 @@ public class RealtimeDatabaseClient {
         });
     }
 
+    // used to retrieve all messages receivd by user (for history)
     public void retrieveReceivedMessages(User user) {
         messageDatabaseReference.orderByChild("receiverUsername").equalTo(user.getUsername()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -144,6 +145,10 @@ public class RealtimeDatabaseClient {
         });
     }
 
+    /***
+     * below functions retrieve messages from sender, and filter the messages based on receiver
+     * for proper display of sender/receiver in chat window
+     ***/
     // retrieve all messages related to sender
     public void retrieveConversationMessages(String currentUserUsername, String otherUserUsername) {
         List<Message> conversationMessages = new ArrayList<>();
@@ -189,5 +194,4 @@ public class RealtimeDatabaseClient {
                     }
                 });
     }
-
 }
