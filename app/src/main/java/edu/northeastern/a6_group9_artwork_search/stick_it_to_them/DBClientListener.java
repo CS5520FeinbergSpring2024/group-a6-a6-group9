@@ -7,6 +7,9 @@ import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.message.Messag
 import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.user.User;
 
 public interface DBClientListener {
+    /**
+     * If succeeded, user != null && message == null. Otherwise, user == null && message != null
+     */
     void onUserLoggedIn(User user, String message);
 
     /**
@@ -22,6 +25,12 @@ public interface DBClientListener {
      * @param message the message in db
      */
     void onMessageReceived(Message message);
+    /**
+     * If succeeded, result != null && message == null. Otherwise, result == null && message != null
+     */
     void onCountStickersSentFinished(Map<String, Integer> result, String message);
+    /**
+     * If succeeded, result != null && message == null. Otherwise, result == null && message != null
+     */
     void onRetrieveReceivedMessagesFinished(List<Message> result, String message);
 }
