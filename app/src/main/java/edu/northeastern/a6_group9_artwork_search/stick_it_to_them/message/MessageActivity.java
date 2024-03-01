@@ -26,6 +26,7 @@ public class MessageActivity extends AppCompatActivity implements StickerPickFra
 
     private RealtimeDatabaseClient databaseClient;
     private String currentUsername;
+    private String receiverUsername;
     private RecyclerView messageRecyclerView;
 
     private List<Message> messageList = new ArrayList<>();
@@ -36,7 +37,7 @@ public class MessageActivity extends AppCompatActivity implements StickerPickFra
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
 
-        String receiverUsername = getIntent().getStringExtra("RECEIVER_USERNAME");
+        receiverUsername = getIntent().getStringExtra("RECEIVER_USERNAME");
         currentUsername = getIntent().getStringExtra("CURRENT_USER_USERNAME");
 
         messageRecyclerView = findViewById(R.id.messageRecyclerView);
@@ -57,21 +58,6 @@ public class MessageActivity extends AppCompatActivity implements StickerPickFra
         databaseClient.fetchMessagesBetweenTwoUsers(currentUsername, receiverUsername);
     }
 
-    private void showStickerPicker() {
-        StickerPickFragment existingFragment = (StickerPickFragment) getSupportFragmentManager().findFragmentById(R.id.stickerFragmentContainer);
-
-        if (existingFragment != null) {
-            getSupportFragmentManager().beginTransaction()
-                    .remove(existingFragment)
-                    .commit();
-        } else {
-            StickerPickFragment stickerPickFragment = new StickerPickFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.stickerFragmentContainer, stickerPickFragment)
-                    .commit();
-        }
-    }
-
     private DBClientListener listener = new DBClientListener() {
         @Override
         public void onUserLoggedIn(User user, String message) {
@@ -83,8 +69,8 @@ public class MessageActivity extends AppCompatActivity implements StickerPickFra
 
         @Override
         public void onMessageReceived(Message message) {
-            if (TextUtils.equals(message.getReceiverUsername(),currentUsername) || TextUtils.equals(message.getSenderUsername(),currentUsername)) {
-                Log.d("MessageActivity", "sender: " + currentUsername + "   receiver: " + message.getReceiverUsername());
+            if ((message.getReceiverUsername().equals(currentUsername)) && message.getSenderUsername().equals(receiverUsername)) {
+                Log.d("MessageActivity", "sender: " + message.getSenderUsername() + "   receiver: " + message.getReceiverUsername());
                 messageList.add(message);
                 messageAdapter.notifyItemInserted(messageList.size() - 1);
                 messageRecyclerView.scrollToPosition(messageList.size() - 1);
@@ -107,16 +93,30 @@ public class MessageActivity extends AppCompatActivity implements StickerPickFra
         }
     };
 
+    private void showStickerPicker() {
+        StickerPickFragment existingFragment = (StickerPickFragment) getSupportFragmentManager().findFragmentById(R.id.stickerFragmentContainer);
+
+        if (existingFragment != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .remove(existingFragment)
+                    .commit();
+        } else {
+            StickerPickFragment stickerPickFragment = new StickerPickFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.stickerFragmentContainer, stickerPickFragment)
+                    .commit();
+        }
+    }
+
     @Override
     public void onStickerSelected(String stickerResId) {
-        String receiverUsername = getIntent().getStringExtra("RECEIVER_USERNAME");
-
         Message message = new Message(currentUsername, receiverUsername, stickerResId);
 
         databaseClient.sendMessage(message);
 
         messageList.add(message);
         messageAdapter.notifyItemInserted(messageList.size() - 1);
+        messageRecyclerView.scrollToPosition(messageList.size() - 1);
 
         // Close the StickerPickFragment
         StickerPickFragment existingFragment = (StickerPickFragment) getSupportFragmentManager().findFragmentById(R.id.stickerFragmentContainer);
