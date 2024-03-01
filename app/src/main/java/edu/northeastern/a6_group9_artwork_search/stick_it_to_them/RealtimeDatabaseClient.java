@@ -1,5 +1,6 @@
 package edu.northeastern.a6_group9_artwork_search.stick_it_to_them;
 
+import android.text.TextUtils;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -58,6 +59,7 @@ public class RealtimeDatabaseClient {
             public void onChildAdded(@NonNull @NotNull DataSnapshot dataSnapshot, @Nullable @org.jetbrains.annotations.Nullable String s) {
                 Message message = dataSnapshot.getValue(Message.class);
                 if (message != null) {
+                    Log.d("Client","Cur username: " + currentUsername);
                     if (message.getReceiverUsername().equals(currentUsername)) {
                         listener.onMessageReceived(message);
                     }

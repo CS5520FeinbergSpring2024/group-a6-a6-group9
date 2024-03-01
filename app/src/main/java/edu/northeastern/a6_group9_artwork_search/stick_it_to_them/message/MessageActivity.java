@@ -1,6 +1,7 @@
 package edu.northeastern.a6_group9_artwork_search.stick_it_to_them.message;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -82,9 +83,12 @@ public class MessageActivity extends AppCompatActivity implements StickerPickFra
 
         @Override
         public void onMessageReceived(Message message) {
-            messageList.add(message);
-            messageAdapter.notifyItemInserted(messageList.size() - 1);
-            messageRecyclerView.scrollToPosition(messageList.size() - 1);
+            if (TextUtils.equals(message.getReceiverUsername(),currentUsername) || TextUtils.equals(message.getSenderUsername(),currentUsername)) {
+                Log.d("MessageActivity", "sender: " + currentUsername + "   receiver: " + message.getReceiverUsername());
+                messageList.add(message);
+                messageAdapter.notifyItemInserted(messageList.size() - 1);
+                messageRecyclerView.scrollToPosition(messageList.size() - 1);
+            }
         }
 
         @Override
