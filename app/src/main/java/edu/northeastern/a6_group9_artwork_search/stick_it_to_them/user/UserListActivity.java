@@ -48,7 +48,6 @@ public class UserListActivity extends AppCompatActivity implements UserAdapter.O
         usersRecyclerView.setAdapter(userAdapter);
         currentUsername = getIntent().getStringExtra("CURRENT_USER_USERNAME");
 
-        Log.d("UserListActivity", currentUsername);
         fetchUsers();
     }
 
@@ -56,6 +55,7 @@ public class UserListActivity extends AppCompatActivity implements UserAdapter.O
     public void onUserClicked(User user) {
         Intent intent = new Intent(this, MessageActivity.class);
         intent.putExtra("RECEIVER_USERNAME", user.getUsername());
+        intent.putExtra("CURRENT_USER_USERNAME", currentUsername);
         startActivity(intent);
     }
 

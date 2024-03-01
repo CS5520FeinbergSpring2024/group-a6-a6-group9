@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -43,11 +44,15 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.message_sender, parent, false);
             return new SenderViewHolder(view);
-        } else {
+        } else if (viewType == VIEW_TYPE_RECEIVER) {
             view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.message_receiver, parent, false);
             return new ReceiverViewHolder(view);
-        }
+        } else {
+            view = new View(parent.getContext());
+            view.setVisibility(View.GONE);
+            return new RecyclerView.ViewHolder(view) {};
+    }
     }
 
     @Override
@@ -58,10 +63,13 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             SenderViewHolder senderHolder = (SenderViewHolder) holder;
             int resId = holder.itemView.getContext().getResources().getIdentifier(message.getStickerId(), "drawable", holder.itemView.getContext().getPackageName());
             senderHolder.senderStickerImageView.setImageResource(resId);
+            senderHolder.senderUsernameTextView.setText(currentUsername);
         } else if (holder instanceof ReceiverViewHolder) {
             ReceiverViewHolder receiverHolder = (ReceiverViewHolder) holder;
             int resId = holder.itemView.getContext().getResources().getIdentifier(message.getStickerId(), "drawable", holder.itemView.getContext().getPackageName());
             receiverHolder.receiverStickerImageView.setImageResource(resId);
+            receiverHolder.receiverUsernameTextView.setText(message.getSenderUsername());
+
         }
     }
 
@@ -74,17 +82,21 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     static class SenderViewHolder extends RecyclerView.ViewHolder {
         ImageView senderStickerImageView;
+        TextView senderUsernameTextView;
         SenderViewHolder(View itemView) {
             super(itemView);
             senderStickerImageView = itemView.findViewById(R.id.senderStickerImageView);
+            senderUsernameTextView = itemView.findViewById(R.id.senderUsername);
         }
     }
 
     static class ReceiverViewHolder extends RecyclerView.ViewHolder {
         ImageView receiverStickerImageView;
+        TextView receiverUsernameTextView;
         ReceiverViewHolder(View itemView) {
             super(itemView);
             receiverStickerImageView = itemView.findViewById(R.id.receiverStickerImageView);
+            receiverUsernameTextView = itemView.findViewById(R.id.receiverUsername);
         }
     }
 }

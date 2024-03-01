@@ -1,6 +1,7 @@
 package edu.northeastern.a6_group9_artwork_search.stick_it_to_them.message;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -32,6 +33,7 @@ public class MessageActivity extends AppCompatActivity implements StickerPickFra
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
         String receiverUsername = getIntent().getStringExtra("RECEIVER_USERNAME");
+        currentUsername = getIntent().getStringExtra("CURRENT_USER_USERNAME");
 
         ImageButton btnBack = findViewById(R.id.btnBack);
         btnBack.setOnClickListener(v -> onBackPressed());
@@ -43,13 +45,16 @@ public class MessageActivity extends AppCompatActivity implements StickerPickFra
         fabShowStickers.setOnClickListener(view -> showStickerPicker());
 
         databaseClient = new RealtimeDatabaseClient(listener);
-
-        currentUsername = getIntent().getStringExtra("CURRENT_USER_USERNAME");
+        databaseClient.retrieveReceivedMessages(new User(currentUsername));
 
         RecyclerView recyclerView = findViewById(R.id.messageRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         messageAdapter = new MessageAdapter(messageList, currentUsername);
         recyclerView.setAdapter(messageAdapter);
+
+        Log.d("MessageActivity", messageList.toString());
+        Log.d("MessageActivity", "Sender Name: " + (currentUsername != null ? currentUsername : "null"));
+        Log.d("MessageActivity", "Receiver Username: " + (receiverUsername != null ? receiverUsername : "null"));
 
     }
 
@@ -89,6 +94,13 @@ public class MessageActivity extends AppCompatActivity implements StickerPickFra
 
         @Override
         public void onRetrieveReceivedMessagesFinished(List<Message> result, String message) {
+            if (result != null) {
+                messageList.clear();
+                messageList.addAll(result);
+                messageAdapter.notifyDataSetChanged();
+            } else {
+                Log.e("MessageActivity", "Error retrieving messages: " + message);
+            }
         }
     };
 
