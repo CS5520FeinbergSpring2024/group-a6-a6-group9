@@ -18,7 +18,7 @@ public interface DBClientListener {
     void onUserAdded(User user);
 
     /**
-     *  Will be triggered when a new message is sent to the login user.
+     *  Will be triggered when a new message is sent to or from the login user.
      * @param message the message in db
      */
     void onMessageReceived(Message message);
