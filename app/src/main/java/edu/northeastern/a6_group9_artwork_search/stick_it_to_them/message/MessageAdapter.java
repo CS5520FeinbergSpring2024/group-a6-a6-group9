@@ -1,6 +1,7 @@
 package edu.northeastern.a6_group9_artwork_search.stick_it_to_them.message;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +59,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Message message = messageList.get(position);
+        Log.d("MessageAdapter", "Message: " + message.getStickerId() + ", Sender: " + message.getSenderUsername() + ", Receiver: " + message.getReceiverUsername());
 
         if (holder instanceof SenderViewHolder) {
             SenderViewHolder senderHolder = (SenderViewHolder) holder;

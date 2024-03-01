@@ -45,7 +45,7 @@ public class MessageActivity extends AppCompatActivity implements StickerPickFra
         fabShowStickers.setOnClickListener(view -> showStickerPicker());
 
         databaseClient = new RealtimeDatabaseClient(listener);
-        databaseClient.retrieveReceivedMessages(new User(currentUsername));
+        databaseClient.retrieveConversationMessages(currentUsername, receiverUsername);
 
         RecyclerView recyclerView = findViewById(R.id.messageRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

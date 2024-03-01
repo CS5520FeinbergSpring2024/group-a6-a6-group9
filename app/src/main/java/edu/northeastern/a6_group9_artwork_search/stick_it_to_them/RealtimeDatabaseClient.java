@@ -143,4 +143,49 @@ public class RealtimeDatabaseClient {
             }
         });
     }
+
+    public void retrieveConversationMessages(String currentUserUsername, String otherUserUsername) {
+        List<Message> conversationMessages = new ArrayList<>();
+
+        messageDatabaseReference.orderByChild("senderUsername").equalTo(currentUserUsername)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            Message message = snapshot.getValue(Message.class);
+                            if (message != null && otherUserUsername.equals(message.getReceiverUsername())) {
+                                conversationMessages.add(message);
+                            }
+                        }
+                        fetchReceivedMessages(currentUserUsername, otherUserUsername, conversationMessages);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        listener.onRetrieveReceivedMessagesFinished(null, databaseError.getMessage());
+                    }
+                });
+    }
+
+    private void fetchReceivedMessages(String currentUserUsername, String otherUserUsername, List<Message> conversationMessages) {
+        messageDatabaseReference.orderByChild("receiverUsername").equalTo(currentUserUsername)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            Message message = snapshot.getValue(Message.class);
+                            if (message != null && otherUserUsername.equals(message.getSenderUsername())) {
+                                conversationMessages.add(message);
+                            }
+                        }
+                        listener.onRetrieveReceivedMessagesFinished(conversationMessages, null);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        listener.onRetrieveReceivedMessagesFinished(null, databaseError.getMessage());
+                    }
+                });
+    }
+
 }
