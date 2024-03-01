@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.user.ChatActivity;
 import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.user.UserLoginActivity;
 
 public class MainActivity extends AppCompatActivity {

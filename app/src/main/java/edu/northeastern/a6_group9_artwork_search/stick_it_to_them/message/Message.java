@@ -1,4 +1,4 @@
-package edu.northeastern.a6_group9_artwork_search.stick_it_to_them;
+package edu.northeastern.a6_group9_artwork_search.stick_it_to_them.message;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
@@ -10,7 +10,6 @@ public class Message {
     private String senderUsername;
     private String receiverUsername;
     private String stickerId;
-    private Date sendTime;
 
     // Default constructor required for calls to DataSnapshot.getValue(User.class)
     public Message() {}
@@ -19,7 +18,6 @@ public class Message {
         this.senderUsername = senderUsername;
         this.receiverUsername = receiverUsername;
         this.stickerId = stickerId;
-        sendTime = Calendar.getInstance().getTime();
     }
 
     public String getSenderUsername() {
@@ -34,7 +32,4 @@ public class Message {
         return stickerId;
     }
 
-    public Date getSendTime() {
-        return sendTime;
-    }
 }

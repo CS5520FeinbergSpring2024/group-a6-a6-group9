@@ -24,7 +24,7 @@
         <activity
             android:name=".stick_it_to_them.user.UserListActivity" />
         <activity
-            android:name=".stick_it_to_them.user.ChatActivity" />
+            android:name=".stick_it_to_them.message.MessageActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

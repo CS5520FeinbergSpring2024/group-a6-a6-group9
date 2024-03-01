@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import edu.northeastern.a6_group9_artwork_search.R;
-import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.User;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
     private LayoutInflater inflater;

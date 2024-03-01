@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.northeastern.a6_group9_artwork_search.R;
-import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.User;
+import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.message.MessageActivity;
 
 public class UserListActivity extends AppCompatActivity implements UserAdapter.OnUserClickListener {
     private RecyclerView usersRecyclerView;
@@ -54,8 +54,8 @@ public class UserListActivity extends AppCompatActivity implements UserAdapter.O
 
     @Override
     public void onUserClicked(User user) {
-        Intent intent = new Intent(this, ChatActivity.class);
-        intent.putExtra("USERNAME", user.getUsername());
+        Intent intent = new Intent(this, MessageActivity.class);
+        intent.putExtra("RECEIVER_USERNAME", user.getUsername());
         startActivity(intent);
     }
 

@@ -1,4 +1,4 @@
-package edu.northeastern.a6_group9_artwork_search.stick_it_to_them.user;
+package edu.northeastern.a6_group9_artwork_search.stick_it_to_them.sticker;
 
 import android.content.Context;
 import android.view.View;

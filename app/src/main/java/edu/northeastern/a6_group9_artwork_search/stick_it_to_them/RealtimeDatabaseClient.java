@@ -11,6 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.message.Message;
+import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.user.User;
+
 public class RealtimeDatabaseClient {
     private final String logTag = "RealtimeDatabaseClient";
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();

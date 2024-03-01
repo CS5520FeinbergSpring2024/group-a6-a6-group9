@@ -3,6 +3,9 @@ package edu.northeastern.a6_group9_artwork_search.stick_it_to_them;
 import java.util.List;
 import java.util.Map;
 
+import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.message.Message;
+import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.user.User;
+
 public interface DBClientListener {
     void onUserLoggedIn(User user, String message);
 

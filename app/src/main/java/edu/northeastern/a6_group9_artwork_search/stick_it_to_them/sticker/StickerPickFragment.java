@@ -1,4 +1,4 @@
-package edu.northeastern.a6_group9_artwork_search.stick_it_to_them.user;
+package edu.northeastern.a6_group9_artwork_search.stick_it_to_them.sticker;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -19,7 +19,7 @@ public class StickerPickFragment extends Fragment {
     private GridView gridViewStickers;
 
     public interface OnStickerSelectedListener {
-        void onStickerSelected(int stickerResId);
+        void onStickerSelected(String stickerResId);
     }
 
     private OnStickerSelectedListener listener;
@@ -63,7 +63,8 @@ public class StickerPickFragment extends Fragment {
 
         gridViewStickers.setOnItemClickListener((parent, view1, position, id) -> {
             if (listener != null) {
-                listener.onStickerSelected(stickerIds[position]);
+                String stickerResName = getResources().getResourceEntryName(stickerIds[position]);
+                listener.onStickerSelected(stickerResName);
             }
         });
 

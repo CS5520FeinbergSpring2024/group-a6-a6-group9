@@ -2,9 +2,9 @@ package edu.northeastern.a6_group9_artwork_search;
 
 import android.util.Log;
 import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.DBClientListener;
-import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.Message;
+import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.message.Message;
 import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.RealtimeDatabaseClient;
-import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.User;
+import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.user.User;
 import org.junit.Test;
 
 import java.util.List;
