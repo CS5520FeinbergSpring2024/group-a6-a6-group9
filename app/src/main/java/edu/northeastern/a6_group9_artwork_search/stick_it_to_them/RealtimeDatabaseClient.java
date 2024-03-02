@@ -1,5 +1,6 @@
 package edu.northeastern.a6_group9_artwork_search.stick_it_to_them;
 
+import android.text.TextUtils;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -57,8 +58,10 @@ public class RealtimeDatabaseClient {
     }
 
     public void loginUser(String username) {
-        if (!currentUsername.isEmpty()) {
-            messageDatabaseReference.removeEventListener(messageListener);
+        if (currentUsername != null) {
+            if (!currentUsername.isEmpty()) {
+                messageDatabaseReference.removeEventListener(messageListener);
+            }
         }
         userDatabaseReference.child(username).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -74,7 +77,8 @@ public class RealtimeDatabaseClient {
                     public void onChildAdded(@NonNull @NotNull DataSnapshot dataSnapshot, @Nullable @org.jetbrains.annotations.Nullable String s) {
                         Message message = dataSnapshot.getValue(Message.class);
                         if (message != null) {
-                            if (message.getReceiverUsername().equals(currentUsername) || message.getSenderUsername().equals(currentUsername)) {
+                            Log.d("Client", "username: " + currentUsername);
+                            if (TextUtils.equals(message.getReceiverUsername(), currentUsername) || TextUtils.equals(message.getSenderUsername(),currentUsername)) {
                                 listener.onMessageReceived(message);
                             }
                         }
