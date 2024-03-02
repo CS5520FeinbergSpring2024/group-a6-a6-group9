@@ -19,6 +19,7 @@ public class RealtimeDatabaseClient {
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private final DatabaseReference userDatabaseReference = database.getReference("users");
     private final DatabaseReference messageDatabaseReference = database.getReference("messages");
+    private ChildEventListener messageListener;
     private final DBClientListener listener;
     private String currentUsername;
 
@@ -56,6 +57,9 @@ public class RealtimeDatabaseClient {
     }
 
     public void loginUser(String username) {
+        if (!currentUsername.isEmpty()) {
+            messageDatabaseReference.removeEventListener(messageListener);
+        }
         userDatabaseReference.child(username).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 User user = task.getResult().getValue(User.class);
@@ -65,7 +69,7 @@ public class RealtimeDatabaseClient {
                 }
                 currentUsername = username;
                 listener.onUserLoggedIn(user, null);
-                messageDatabaseReference.addChildEventListener(new ChildEventListener() {
+                messageListener = new ChildEventListener() {
                     @Override
                     public void onChildAdded(@NonNull @NotNull DataSnapshot dataSnapshot, @Nullable @org.jetbrains.annotations.Nullable String s) {
                         Message message = dataSnapshot.getValue(Message.class);
@@ -95,7 +99,8 @@ public class RealtimeDatabaseClient {
                     public void onCancelled(@NonNull @NotNull DatabaseError databaseError) {
 
                     }
-                });
+                };
+                messageDatabaseReference.addChildEventListener(messageListener);
             } else {
                 String message = "Error getting data" + task.getException();
                 Log.e(logTag, message);
