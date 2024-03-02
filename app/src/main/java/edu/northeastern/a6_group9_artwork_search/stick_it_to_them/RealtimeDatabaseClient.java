@@ -1,5 +1,6 @@
 package edu.northeastern.a6_group9_artwork_search.stick_it_to_them;
 
+import android.text.TextUtils;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,11 +12,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.message.Message;
+import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.user.User;
+
 public class RealtimeDatabaseClient {
     private final String logTag = "RealtimeDatabaseClient";
     private final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private final DatabaseReference userDatabaseReference = database.getReference("users");
     private final DatabaseReference messageDatabaseReference = database.getReference("messages");
+    private ChildEventListener messageListener;
     private final DBClientListener listener;
     private String currentUsername;
 
@@ -50,40 +55,14 @@ public class RealtimeDatabaseClient {
 
             }
         });
-        messageDatabaseReference.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull @NotNull DataSnapshot dataSnapshot, @Nullable @org.jetbrains.annotations.Nullable String s) {
-                Message message = dataSnapshot.getValue(Message.class);
-                if (message != null) {
-                    if (message.getReceiverUsername().equals(currentUsername)) {
-                        listener.onMessageReceived(message);
-                    }
-                }
-            }
-
-            @Override
-            public void onChildChanged(@NonNull @NotNull DataSnapshot dataSnapshot, @Nullable @org.jetbrains.annotations.Nullable String s) {
-                Log.d(logTag, "message onChildChanged");
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull @NotNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull @NotNull DataSnapshot dataSnapshot, @Nullable @org.jetbrains.annotations.Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull @NotNull DatabaseError databaseError) {
-
-            }
-        });
     }
 
     public void loginUser(String username) {
+        if (currentUsername != null) {
+            if (!currentUsername.isEmpty()) {
+                messageDatabaseReference.removeEventListener(messageListener);
+            }
+        }
         userDatabaseReference.child(username).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 User user = task.getResult().getValue(User.class);
@@ -93,6 +72,39 @@ public class RealtimeDatabaseClient {
                 }
                 currentUsername = username;
                 listener.onUserLoggedIn(user, null);
+                messageListener = new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull @NotNull DataSnapshot dataSnapshot, @Nullable @org.jetbrains.annotations.Nullable String s) {
+                        Message message = dataSnapshot.getValue(Message.class);
+                        if (message != null) {
+                            Log.d("Client", "username: " + currentUsername);
+                            if (TextUtils.equals(message.getReceiverUsername(), currentUsername) || TextUtils.equals(message.getSenderUsername(),currentUsername)) {
+                                listener.onMessageReceived(message);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull @NotNull DataSnapshot dataSnapshot, @Nullable @org.jetbrains.annotations.Nullable String s) {
+                        Log.d(logTag, "message onChildChanged");
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull @NotNull DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull @NotNull DataSnapshot dataSnapshot, @Nullable @org.jetbrains.annotations.Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull @NotNull DatabaseError databaseError) {
+
+                    }
+                };
+                messageDatabaseReference.addChildEventListener(messageListener);
             } else {
                 String message = "Error getting data" + task.getException();
                 Log.e(logTag, message);
@@ -125,6 +137,7 @@ public class RealtimeDatabaseClient {
         });
     }
 
+    // used to retrieve all messages received by user (for history)
     public void retrieveReceivedMessages(User user) {
         messageDatabaseReference.orderByChild("receiverUsername").equalTo(user.getUsername()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -137,6 +150,30 @@ public class RealtimeDatabaseClient {
                 String message = "Error getting data" + task.getException();
                 Log.e(logTag, message);
                 listener.onRetrieveReceivedMessagesFinished(null, message);
+            }
+        });
+    }
+
+    // fetch messages related to two users only
+    public void fetchMessagesBetweenTwoUsers(String currentName, String receiverName) {
+        List<Message> messages = new ArrayList<>();
+        messageDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Message message = snapshot.getValue(Message.class);
+                    if (message != null &&
+                            (currentName.equals(message.getSenderUsername()) && receiverName.equals(message.getReceiverUsername()) ||
+                                    currentName.equals(message.getReceiverUsername()) && receiverName.equals(message.getSenderUsername()))) {
+                        messages.add(message);
+                    }
+                }
+                listener.onRetrieveReceivedMessagesFinished(messages, null);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                listener.onRetrieveReceivedMessagesFinished(null, databaseError.getMessage());
             }
         });
     }

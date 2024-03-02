@@ -1,4 +1,4 @@
-package edu.northeastern.a6_group9_artwork_search.stick_it_to_them;
+package edu.northeastern.a6_group9_artwork_search.stick_it_to_them.user;
 
 import android.os.Parcel;
 import android.os.Parcelable;

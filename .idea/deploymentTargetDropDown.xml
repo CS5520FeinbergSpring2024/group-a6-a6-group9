@@ -3,25 +3,20 @@
   <component name="deploymentTargetDropDown">
     <value>
       <entry key="app">
-        <State />
-      </entry>
-      <entry key="testCountStickersSent()">
-        <State />
-      </entry>
-      <entry key="testLaunch()">
-        <State />
-      </entry>
-      <entry key="testListArtwork()">
-        <State />
-      </entry>
-      <entry key="testLoginUser()">
-        <State />
-      </entry>
-      <entry key="testRetrieveReceivedMessages()">
-        <State />
-      </entry>
-      <entry key="testSendMessage()">
-        <State />
+        <State>
+          <runningDeviceTargetSelectedWithDropDown>
+            <Target>
+              <type value="RUNNING_DEVICE_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="$USER_HOME$/.android/avd/Pixel_7_Pro_API_27.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </runningDeviceTargetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2024-03-01T04:56:47.696483Z" />
+        </State>
       </entry>
     </value>
   </component>
