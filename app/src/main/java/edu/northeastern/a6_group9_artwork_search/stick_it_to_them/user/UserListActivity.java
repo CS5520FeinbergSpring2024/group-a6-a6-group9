@@ -3,6 +3,7 @@ package edu.northeastern.a6_group9_artwork_search.stick_it_to_them.user;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,7 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.northeastern.a6_group9_artwork_search.R;
+import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.message.Message;
 import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.message.MessageActivity;
+import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.message.ReceivedMessageActivity;
 
 public class UserListActivity extends AppCompatActivity implements UserAdapter.OnUserClickListener {
     private RecyclerView usersRecyclerView;
@@ -49,6 +53,8 @@ public class UserListActivity extends AppCompatActivity implements UserAdapter.O
         currentUsername = getIntent().getStringExtra("CURRENT_USER_USERNAME");
 
         fetchUsers();
+
+        newMessageNotification();
     }
 
     @Override
@@ -81,5 +87,38 @@ public class UserListActivity extends AppCompatActivity implements UserAdapter.O
                 Log.e("UserListActivity", "Database error", databaseError.toException());
             }
         });
+    }
+
+    private void newMessageNotification() {
+        DatabaseReference msgDatabaseRef = FirebaseDatabase.getInstance().getReference("messages");
+
+        msgDatabaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Message message = snapshot.getValue(Message.class);
+                    if (message != null && message.getReceiverUsername().equals(currentUsername)) {
+                        Snackbar.make(usersRecyclerView, "You have a new message",
+                                        Snackbar.LENGTH_LONG)
+                                .setAction("View", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        viewMessageHistory(v);
+                                    }
+                                }).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
+    }
+
+    public void viewMessageHistory(View view) {
+        Intent intent = new Intent(this, ReceivedMessageActivity.class);
+        intent.putExtra("CURRENT_USER_USERNAME", currentUsername);
+        startActivity(intent);
     }
 }
