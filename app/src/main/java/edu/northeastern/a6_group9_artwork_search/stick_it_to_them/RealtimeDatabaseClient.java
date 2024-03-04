@@ -2,9 +2,12 @@ package edu.northeastern.a6_group9_artwork_search.stick_it_to_them;
 
 import android.text.TextUtils;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.google.firebase.database.*;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -14,6 +17,7 @@ import java.util.Map;
 
 import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.message.Message;
 import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.user.User;
+
 
 public class RealtimeDatabaseClient {
     private final String logTag = "RealtimeDatabaseClient";
