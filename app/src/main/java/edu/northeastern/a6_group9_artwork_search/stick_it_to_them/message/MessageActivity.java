@@ -54,13 +54,6 @@ public class MessageActivity extends AppCompatActivity implements StickerPickFra
         FloatingActionButton fabShowStickers = findViewById(R.id.fab_show_stickers);
         fabShowStickers.setOnClickListener(view -> showStickerPicker());
 
-        // Add a button to display the count of each kind of stickers a user sent.
-        Button btnShowCount = findViewById(R.id.show_count_button);
-        btnShowCount.setOnClickListener(view -> {
-            User currentUser = new User(currentUsername);
-            databaseClient.countStickersSent(currentUser);
-        });
-
         databaseClient = new RealtimeDatabaseClient(listener);
         databaseClient.fetchMessagesBetweenTwoUsers(currentUsername, receiverUsername);
     }
@@ -84,32 +77,8 @@ public class MessageActivity extends AppCompatActivity implements StickerPickFra
             }
         }
 
-        // Modify the method to show the dialog with stickers count.
         @Override
         public void onCountStickersSentFinished(Map<String, Integer> result, String message) {
-            runOnUiThread(() -> {
-                if (result != null && !result.isEmpty()) {
-                    StringBuilder stickersCountBuilder = new StringBuilder("Stickers sent:\n");
-                    for (Map.Entry<String, Integer> entry : result.entrySet()) {
-                        stickersCountBuilder.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
-                    }
-
-                    // Show an AlertDialog with the count
-                    new AlertDialog.Builder(MessageActivity.this)
-                            .setTitle("Sticker Counts")
-                            .setMessage(stickersCountBuilder.toString())
-                            .setPositiveButton("OK", null)
-                            .show();
-                } else {
-                    // Handle the case where no stickers were sent or there was an error
-                    new AlertDialog.Builder(MessageActivity.this)
-                            .setTitle("Sticker Counts")
-                            .setMessage("Error or no stickers sent")
-                            .setPositiveButton("OK", null)
-                            .show();
-                    Log.e("MessageActivity", "Error or no stickers sent: " + message);
-                }
-            });
         }
 
 
