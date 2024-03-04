@@ -8,6 +8,7 @@ import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,6 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import edu.northeastern.a6_group9_artwork_search.R;
 import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.message.Message;
@@ -45,6 +47,9 @@ public class UserListActivity extends AppCompatActivity implements UserAdapter.O
             startActivity(intent);
             finish();
         });
+
+        ImageButton historyButton = findViewById(R.id.historyButton);
+        historyButton.setOnClickListener(view -> showDetailsPopup());
 
         usersRecyclerView = findViewById(R.id.usersRecyclerView);
         usersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -116,9 +121,62 @@ public class UserListActivity extends AppCompatActivity implements UserAdapter.O
         });
     }
 
-    public void viewMessageHistory(View view) {
+    public void showDetailsPopup() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Details");
+
+        // Define the buttons and their onClick logic
+        builder.setItems(new CharSequence[]{"Message History", "Show Stickers Count"}, (dialog, which) -> {
+            switch (which) {
+                case 0: // Message History clicked
+                    viewMessageHistory(); // Implement this method to show message history
+                    break;
+                case 1: // Show Stickers Count clicked
+                    fetchAndShowStickersCount(); // Implement this method to show stickers count
+                    break;
+            }
+        });
+
+        // Create and show the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    // Placeholder methods for the actions
+    private void viewMessageHistory() {
         Intent intent = new Intent(this, ReceivedMessageActivity.class);
         intent.putExtra("CURRENT_USER_USERNAME", currentUsername);
         startActivity(intent);
+    }
+
+    private void fetchAndShowStickersCount() {
+
+    }
+
+    @Override
+    public void onCountStickersSentFinished(Map<String, Integer> result, String message) {
+        runOnUiThread(() -> {
+            if (result != null && !result.isEmpty()) {
+                StringBuilder stickersCountBuilder = new StringBuilder("Stickers sent:\n");
+                for (Map.Entry<String, Integer> entry : result.entrySet()) {
+                    stickersCountBuilder.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+                }
+
+                // Show an AlertDialog with the count
+                AlertDialog show = new AlertDialog.Builder(MessageActivity.this)
+                        .setTitle("Sticker Counts")
+                        .setMessage(stickersCountBuilder.toString())
+                        .setPositiveButton("OK", null)
+                        .show();
+            } else {
+                // Handle the case where no stickers were sent or there was an error
+                AlertDialog alertDialog = new AlertDialog.Builder(MessageActivity.this)
+                        .setTitle("Sticker Counts")
+                        .setMessage("Error or no stickers sent")
+                        .setPositiveButton("OK", null)
+                        .show();
+                Log.e("MessageActivity", "Error or no stickers sent: " + message);
+            }
+        });
     }
 }
