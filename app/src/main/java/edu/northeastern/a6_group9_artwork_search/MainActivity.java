@@ -25,4 +25,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, UserLoginActivity.class);
         startActivity(intent);
     }
+
+    public void startAboutMe(View view) {
+        Intent intent = new Intent(this, AboutMeActivity.class);
+        startActivity(intent);
+    }
 }

@@ -20,6 +20,7 @@
         android:id="@+id/about_us"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="startAboutMe"
         android:text="About Us"
         app:layout_constraintBottom_toTopOf="@id/btn_web_service"
         app:layout_constraintTop_toBottomOf="@id/tv_group_name"
