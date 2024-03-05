@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.northeastern.a6_group9_artwork_search.R;
-import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.user.User;
-import edu.northeastern.a6_group9_artwork_search.stick_it_to_them.user.UserAdapter;
 
 public class ReceivedMessageActivity extends AppCompatActivity {
     private RecyclerView receivedMessageRecyclerView;

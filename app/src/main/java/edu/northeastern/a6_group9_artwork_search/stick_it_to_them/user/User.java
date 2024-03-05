@@ -2,7 +2,9 @@ package edu.northeastern.a6_group9_artwork_search.stick_it_to_them.user;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
+
 import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties

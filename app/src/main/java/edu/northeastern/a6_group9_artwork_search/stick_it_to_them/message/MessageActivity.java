@@ -1,12 +1,13 @@
 package edu.northeastern.a6_group9_artwork_search.stick_it_to_them.message;
 
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,7 +29,6 @@ public class MessageActivity extends AppCompatActivity implements StickerPickFra
     private String currentUsername;
     private String receiverUsername;
     private RecyclerView messageRecyclerView;
-
     private List<Message> messageList = new ArrayList<>();
     private MessageAdapter messageAdapter;
 
@@ -80,6 +80,7 @@ public class MessageActivity extends AppCompatActivity implements StickerPickFra
         @Override
         public void onCountStickersSentFinished(Map<String, Integer> result, String message) {
         }
+
 
         @Override
         public void onRetrieveReceivedMessagesFinished(List<Message> result, String message) {
